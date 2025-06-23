@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { useSettingsStore } from '@/store/settingsStore';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -46,7 +47,11 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+  const systemColorScheme = useColorScheme();
+  const { settings } = useSettingsStore();
+  
+  // Use settings theme if available, otherwise fallback to system
+  const colorScheme = settings.theme === 'dark' ? 'dark' : 'light';
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

@@ -20,6 +20,7 @@ const defaultSettings: UserSettings = {
   vibrationEnabled: true,
   language: 'ja', // Default to Japanese
   isPremium: false, // Default to free user
+  showLetters: true, // Default to showing letters
 };
 
 export const useSettingsStore = create<SettingsState>()(

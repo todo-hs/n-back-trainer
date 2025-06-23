@@ -12,6 +12,7 @@ export interface Response {
 }
 
 export interface SessionStats {
+  id: string; // Unique session ID
   nLevel: number;
   mode: 'fixed' | 'adaptive';
   visualHits: number;
@@ -21,8 +22,11 @@ export interface SessionStats {
   audioMisses: number;
   audioFalseAlarms: number;
   averageReactionTime: number;
+  accuracy: number; // Overall accuracy percentage
+  duration: number; // Session duration in seconds
   startedAt: Date;
-  finishedAt?: Date;
+  finishedAt: Date;
+  timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night'; // Time period classification
 }
 
 export interface UserSettings {
@@ -36,6 +40,7 @@ export interface UserSettings {
   vibrationEnabled: boolean;
   language: 'en' | 'ja';
   isPremium: boolean; // Premium subscription status
+  showLetters: boolean; // Show/hide letters during audio stimulus
 }
 
 export interface TrainingState {

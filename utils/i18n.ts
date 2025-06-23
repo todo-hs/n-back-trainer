@@ -52,6 +52,8 @@ export interface Translations {
     soundDescription: string;
     vibration: string;
     vibrationDescription: string;
+    showLetters: string;
+    showLettersDescription: string;
     appearance: string;
     theme: string;
     themeDescription: string;
@@ -79,6 +81,25 @@ export interface Translations {
     n7: string;
     n8: string;
     n9: string;
+  };
+  
+  // Stats Screen
+  stats: {
+    title: string;
+    subtitle: string;
+    performanceOverview: string;
+    bestNLevel: string;
+    totalSessions: string;
+    averageAccuracy: string;
+    timeOfDayPerformance: string;
+    recentSessions: string;
+    noDataMessage: string;
+    duration: string;
+    sessions: string;
+    morning: string;
+    afternoon: string;
+    evening: string;
+    night: string;
   };
   
   // General
@@ -138,6 +159,8 @@ export const translations: Record<'ja' | 'en', Translations> = {
       soundDescription: '文字の音声再生',
       vibration: '振動',
       vibrationDescription: '応答時の触覚フィードバック',
+      showLetters: '文字表示',
+      showLettersDescription: '音声刺激時に文字を画面に表示',
       appearance: '外観',
       theme: 'テーマ',
       themeDescription: 'アプリの外観',
@@ -163,6 +186,23 @@ export const translations: Record<'ja' | 'en', Translations> = {
       n7: 'N=7 (エキスパート)',
       n8: 'N=8 (マスター)',
       n9: 'N=9 (伝説)',
+    },
+    stats: {
+      title: '統計',
+      subtitle: 'トレーニング進捗',
+      performanceOverview: 'パフォーマンス概要',
+      bestNLevel: '最高N-レベル',
+      totalSessions: '総セッション数',
+      averageAccuracy: '平均正解率',
+      timeOfDayPerformance: '時間帯別パフォーマンス',
+      recentSessions: '最近のセッション',
+      noDataMessage: 'まだセッションデータがありません。\nトレーニングを開始して統計を記録しましょう！',
+      duration: '時間',
+      sessions: '回',
+      morning: '朝',
+      afternoon: '昼',
+      evening: '夕方',
+      night: '夜',
     },
     general: {
       dark: 'ダーク',
@@ -219,6 +259,8 @@ export const translations: Record<'ja' | 'en', Translations> = {
       soundDescription: 'Play audio letters',
       vibration: 'Vibration',
       vibrationDescription: 'Haptic feedback on responses',
+      showLetters: 'Show Letters',
+      showLettersDescription: 'Display letters on screen during audio stimulus',
       appearance: 'Appearance',
       theme: 'Theme',
       themeDescription: 'App appearance',
@@ -244,6 +286,23 @@ export const translations: Record<'ja' | 'en', Translations> = {
       n7: 'N=7 (Master)',
       n8: 'N=8 (Grandmaster)',
       n9: 'N=9 (Legendary)',
+    },
+    stats: {
+      title: 'Statistics',
+      subtitle: 'Training Progress',
+      performanceOverview: 'Performance Overview',
+      bestNLevel: 'Best N-Level',
+      totalSessions: 'Total Sessions',
+      averageAccuracy: 'Average Accuracy',
+      timeOfDayPerformance: 'Performance by Time of Day',
+      recentSessions: 'Recent Sessions',
+      noDataMessage: 'No session data yet.\nStart training to record statistics!',
+      duration: 'Duration',
+      sessions: 'sessions',
+      morning: 'Morning',
+      afternoon: 'Afternoon',
+      evening: 'Evening',
+      night: 'Night',
     },
     general: {
       dark: 'Dark',

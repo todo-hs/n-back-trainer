@@ -1308,3 +1308,28 @@ Call Stack
 HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
 [CoreAudio] 126723          HALC_ProxyIOContext.cpp:1622
 HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ ERROR  Warning: ReferenceError: Property 'Home' doesn't exist
+
+This error is located at:
+
+[0m [90m 19 |[39m
+ [90m 20 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mTabLayout[39m() {
+[31m[1m>[22m[39m[90m 21 |[39m   [36mconst[39m colorScheme [33m=[39m useColorScheme()[33m;[39m
+ [90m    |[39m                                     [31m[1m^[22m[39m
+ [90m 22 |[39m
+ [90m 23 |[39m   [36mreturn[39m (
+ [90m 24 |[39m     [33m<[39m[33mTabs[39m[0m
+
+Call Stack
+  TabLayout (app/(tabs)/_layout.tsx:21:37)
+  ScreenContentWrapper (<anonymous>)
+  RNSScreenStack (<anonymous>)
+  RootLayoutNav (app/_layout.tsx:50:43)
+  RootLayout (app/_layout.tsx:26:35)
+  ErrorBoundary(./_layout.tsx) (<anonymous>)
+  RNCSafeAreaProvider (<anonymous>)
+  App (<anonymous>)
+  ErrorOverlay (<anonymous>)
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]

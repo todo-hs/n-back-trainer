@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import * as Speech from 'expo-speech';
 import * as Haptics from 'expo-haptics';
 import { useSettingsStore } from '@/store/settingsStore';
+import { useStatsStore } from '@/store/statsStore';
 import { useTranslations } from '@/utils/i18n';
 
 // Types
@@ -14,6 +15,7 @@ interface Trial {
 
 export default function FixedTrainingScreen() {
   const { settings } = useSettingsStore();
+  const { addSession } = useStatsStore();
   const t = useTranslations(settings.language);
   const N_LEVEL = settings.fixedN; // Use selected fixed N-level from settings
   const [currentTrial, setCurrentTrial] = useState(0);
@@ -23,6 +25,7 @@ export default function FixedTrainingScreen() {
   const [currentLetter, setCurrentLetter] = useState('');
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [showingStimulus, setShowingStimulus] = useState(false);
+  const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   
   // Response tracking
   const [visualHits, setVisualHits] = useState<boolean[]>([]);
@@ -118,6 +121,7 @@ export default function FixedTrainingScreen() {
     setScore({ correct: 0, total: 0 });
     setVisualHits([]);
     setAudioHits([]);
+    setSessionStartTime(new Date());
     
     // Reset animations
     progressAnimation.setValue(0);
@@ -259,11 +263,45 @@ export default function FixedTrainingScreen() {
   // End game
   const endGame = () => {
     setIsRunning(false);
-    const accuracy = score.total > 0 ? (score.correct / score.total * 100).toFixed(1) : '0';
+    const endTime = new Date();
+    const accuracy = score.total > 0 ? (score.correct / score.total * 100) : 0;
+    
+    // Save session data
+    if (sessionStartTime && score.total > 0) {
+      const duration = Math.round((endTime.getTime() - sessionStartTime.getTime()) / 1000);
+      const visualCorrect = visualHits.filter((hit, index) => {
+        if (index < N_LEVEL || !hit) return false;
+        const currentTrialData = trials[index];
+        const nBackTrial = trials[index - N_LEVEL];
+        return currentTrialData.position === nBackTrial.position;
+      }).length;
+      const audioCorrect = audioHits.filter((hit, index) => {
+        if (index < N_LEVEL || !hit) return false;
+        const currentTrialData = trials[index];
+        const nBackTrial = trials[index - N_LEVEL];
+        return currentTrialData.letter === nBackTrial.letter;
+      }).length;
+      
+      addSession({
+        nLevel: N_LEVEL,
+        mode: 'fixed',
+        visualHits: visualCorrect,
+        visualMisses: 0, // Could be calculated based on actual matches
+        visualFalseAlarms: visualHits.length - visualCorrect,
+        audioHits: audioCorrect,
+        audioMisses: 0, // Could be calculated based on actual matches
+        audioFalseAlarms: audioHits.length - audioCorrect,
+        averageReactionTime: 0, // Could be implemented with reaction time tracking
+        accuracy: Math.round(accuracy),
+        duration,
+        startedAt: sessionStartTime,
+        finishedAt: endTime,
+      });
+    }
     
     Alert.alert(
       t.training.sessionComplete,
-      `${t.training.accuracy}: ${accuracy}%\n${t.training.correct}: ${score.correct}/${score.total}\n${t.training.level}: ${N_LEVEL} (${settings.language === 'ja' ? '固定' : 'Fixed'})`,
+      `${t.training.accuracy}: ${accuracy.toFixed(1)}%\n${t.training.correct}: ${score.correct}/${score.total}\n${t.training.level}: ${N_LEVEL} (${settings.language === 'ja' ? '固定' : 'Fixed'})`,
       [
         { text: t.training.continue, onPress: () => handleStartTraining() },
         { text: t.training.backToHome, onPress: () => router.push('/') }
@@ -325,7 +363,7 @@ export default function FixedTrainingScreen() {
       
       <View style={styles.audioContainer}>
         <Text style={styles.audioTitle}>
-          {showingStimulus ? currentLetter : ' '}
+          {showingStimulus && settings.showLetters ? currentLetter : ' '}
         </Text>
         <Text style={styles.audioLabel}>
           {canRespond ? t.training.detectMessage : `${N_LEVEL}${t.training.waitMessage}`}

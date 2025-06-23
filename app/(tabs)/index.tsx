@@ -8,6 +8,8 @@ export default function HomeScreen() {
   const { settings } = useSettingsStore();
   const t = useTranslations(settings.language);
   
+  const isDark = settings.theme === 'dark';
+  
   const goToAdaptive = () => {
     router.navigate('/training/adaptive');
   };
@@ -16,17 +18,44 @@ export default function HomeScreen() {
     router.navigate('/training/fixed');
   };
 
+  const dynamicStyles = {
+    container: {
+      ...styles.container,
+      backgroundColor: isDark ? '#000000' : '#FFFFFF',
+    },
+    title: {
+      ...styles.title,
+      color: isDark ? '#FFFFFF' : '#000000',
+    },
+    subtitle: {
+      ...styles.subtitle,
+      color: isDark ? '#888888' : '#666666',
+    },
+    modeExplanation: {
+      ...styles.modeExplanation,
+      backgroundColor: isDark ? '#1A1A1A' : '#F2F2F7',
+    },
+    explanationTitle: {
+      ...styles.explanationTitle,
+      color: isDark ? '#FFFFFF' : '#000000',
+    },
+    explanationText: {
+      ...styles.explanationText,
+      color: isDark ? '#CCCCCC' : '#666666',
+    },
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={dynamicStyles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>{t.home.title}</Text>
-        <Text style={styles.subtitle}>
+        <Text style={dynamicStyles.title}>{t.home.title}</Text>
+        <Text style={dynamicStyles.subtitle}>
           {t.home.subtitle}
         </Text>
         
-        <View style={styles.modeExplanation}>
-          <Text style={styles.explanationTitle}>{t.home.rulesTitle}</Text>
-          <Text style={styles.explanationText}>
+        <View style={dynamicStyles.modeExplanation}>
+          <Text style={dynamicStyles.explanationTitle}>{t.home.rulesTitle}</Text>
+          <Text style={dynamicStyles.explanationText}>
             {t.home.rulesText}
           </Text>
         </View>
@@ -50,7 +79,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: '#000000', // This will be overridden by theme
   },
   content: {
     flex: 1,

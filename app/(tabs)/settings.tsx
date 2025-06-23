@@ -10,6 +10,65 @@ export default function SettingsScreen() {
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const t = useTranslations(settings.language);
   
+  const isDark = settings.theme === 'dark';
+  
+  const dynamicStyles = {
+    container: {
+      ...styles.container,
+      backgroundColor: isDark ? '#000' : '#FFFFFF',
+    },
+    header: {
+      ...styles.header,
+      backgroundColor: '#007AFF', // Keep header blue regardless of theme
+    },
+    section: {
+      ...styles.section,
+    },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      color: '#007AFF', // Keep blue regardless of theme
+    },
+    settingRow: {
+      ...styles.settingRow,
+      backgroundColor: isDark ? '#1A1A1A' : '#F2F2F7',
+      borderColor: isDark ? '#2A2A2A' : '#E5E5EA',
+    },
+    settingLabel: {
+      ...styles.settingLabel,
+      color: isDark ? '#FFF' : '#000',
+    },
+    settingDescription: {
+      ...styles.settingDescription,
+      color: isDark ? '#888' : '#666',
+    },
+    modalOverlay: {
+      ...styles.modalOverlay,
+      backgroundColor: isDark ? 'rgba(0, 0, 0, 0.9)' : 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+      ...styles.modalContent,
+      backgroundColor: isDark ? '#1A1A1A' : '#FFFFFF',
+      borderColor: isDark ? '#2A2A2A' : '#E5E5EA',
+    },
+    modalHeader: {
+      ...styles.modalHeader,
+      backgroundColor: isDark ? '#2A2A2A' : '#F2F2F7',
+      borderBottomColor: isDark ? '#2A2A2A' : '#E5E5EA',
+    },
+    modalTitle: {
+      ...styles.modalTitle,
+      color: isDark ? '#FFF' : '#000',
+    },
+    nLevelOption: {
+      ...styles.nLevelOption,
+      backgroundColor: isDark ? '#2A2A2A' : '#F9F9F9',
+    },
+    nLevelOptionText: {
+      ...styles.nLevelOptionText,
+      color: isDark ? '#FFF' : '#000',
+    },
+  };
+  
   const nLevelOptions = [
     { value: 1, label: t.nLevels.n1, premium: false },
     { value: 2, label: t.nLevels.n2, premium: false },
@@ -63,9 +122,9 @@ export default function SettingsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={dynamicStyles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.header}>
+        <View style={dynamicStyles.header}>
           <Text style={styles.title}>{t.settings.title}</Text>
           <Text style={styles.subtitle}>{t.settings.subtitle}</Text>
         </View>
@@ -163,21 +222,44 @@ export default function SettingsScreen() {
               ios_backgroundColor={'#2A2A2A'}
             />
           </View>
+          
+          <View style={styles.settingRow}>
+            <View style={styles.settingRowContent}>
+              <Text style={styles.settingIcon}>🔤</Text>
+              <View style={styles.settingInfo}>
+                <Text style={styles.settingLabel}>{t.settings.showLetters}</Text>
+                <Text style={styles.settingDescription}>{t.settings.showLettersDescription}</Text>
+              </View>
+            </View>
+            <Switch
+              value={settings.showLetters}
+              onValueChange={(value) => updateSettings({ showLetters: value })}
+              trackColor={{ false: '#2A2A2A', true: '#007AFF' }}
+              thumbColor={settings.showLetters ? '#FFF' : '#888'}
+              ios_backgroundColor={'#2A2A2A'}
+            />
+          </View>
         </View>
         
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t.settings.appearance}</Text>
           
-          <View style={styles.settingRow}>
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => updateSettings({ theme: settings.theme === 'dark' ? 'light' : 'dark' })}
+          >
             <View style={styles.settingRowContent}>
-              <Text style={styles.settingIcon}>🌙</Text>
+              <Text style={styles.settingIcon}>{settings.theme === 'dark' ? '🌙' : '☀️'}</Text>
               <View style={styles.settingInfo}>
                 <Text style={styles.settingLabel}>{t.settings.theme}</Text>
                 <Text style={styles.settingDescription}>{t.settings.themeDescription}</Text>
               </View>
             </View>
-            <Text style={styles.settingValue}>{settings.theme === 'dark' ? t.general.dark : t.general.light}</Text>
-          </View>
+            <View style={styles.settingValueContainer}>
+              <Text style={styles.settingValue}>{settings.theme === 'dark' ? t.general.dark : t.general.light}</Text>
+              <Text style={styles.settingArrow}>›</Text>
+            </View>
+          </TouchableOpacity>
           
           <TouchableOpacity 
             style={styles.settingRow}
