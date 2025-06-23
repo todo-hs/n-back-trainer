@@ -12,60 +12,127 @@ export default function SettingsScreen() {
   
   const isDark = settings.theme === 'dark';
   
+  // ダークモードでも背景のみ黒、他はライトモード仕様
   const dynamicStyles = {
     container: {
       ...styles.container,
-      backgroundColor: isDark ? '#000' : '#FFFFFF',
+      backgroundColor: isDark ? '#000000' : '#F5F5F7',
     },
     header: {
       ...styles.header,
-      backgroundColor: '#007AFF', // Keep header blue regardless of theme
+      backgroundColor: '#007AFF',
+      borderBottomWidth: 0,
+      borderBottomColor: 'transparent',
+    },
+    title: {
+      ...styles.title,
+      color: '#FFFFFF',
+    },
+    subtitle: {
+      ...styles.subtitle,
+      color: 'rgba(255, 255, 255, 0.9)',
     },
     section: {
       ...styles.section,
     },
     sectionTitle: {
       ...styles.sectionTitle,
-      color: '#007AFF', // Keep blue regardless of theme
+      color: '#1D4ED8',
     },
     settingRow: {
       ...styles.settingRow,
-      backgroundColor: isDark ? '#1A1A1A' : '#F2F2F7',
-      borderColor: isDark ? '#2A2A2A' : '#E5E5EA',
+      backgroundColor: '#FFFFFF',
+      borderColor: 'transparent',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 3,
     },
     settingLabel: {
       ...styles.settingLabel,
-      color: isDark ? '#FFF' : '#000',
+      color: '#1C1C1E',
     },
     settingDescription: {
       ...styles.settingDescription,
-      color: isDark ? '#888' : '#666',
+      color: '#6B7280',
+    },
+    settingValue: {
+      ...styles.settingValue,
+      color: '#007AFF',
+    },
+    settingValueContainer: {
+      ...styles.settingValueContainer,
+      backgroundColor: 'rgba(0, 122, 255, 0.12)',
+      borderColor: 'rgba(0, 122, 255, 0.2)',
+    },
+    settingValueDisplay: {
+      ...styles.settingValueDisplay,
+      backgroundColor: 'rgba(0, 122, 255, 0.12)',
+      borderColor: 'rgba(0, 122, 255, 0.2)',
+    },
+    iconContainer: {
+      ...styles.iconContainer,
+      backgroundColor: 'rgba(0, 122, 255, 0.15)',
+    },
+    switchContainer: {
+      ...styles.switchContainer,
+      backgroundColor: 'rgba(0, 0, 0, 0.05)',
     },
     modalOverlay: {
       ...styles.modalOverlay,
-      backgroundColor: isDark ? 'rgba(0, 0, 0, 0.9)' : 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: 'rgba(0, 0, 0, 0.6)',
     },
     modalContent: {
       ...styles.modalContent,
-      backgroundColor: isDark ? '#1A1A1A' : '#FFFFFF',
-      borderColor: isDark ? '#2A2A2A' : '#E5E5EA',
+      backgroundColor: '#FFFFFF',
+      borderColor: 'transparent',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 20 },
+      shadowOpacity: 0.25,
+      shadowRadius: 25,
+      elevation: 20,
     },
     modalHeader: {
       ...styles.modalHeader,
-      backgroundColor: isDark ? '#2A2A2A' : '#F2F2F7',
-      borderBottomColor: isDark ? '#2A2A2A' : '#E5E5EA',
+      backgroundColor: '#F8F9FA',
+      borderBottomColor: '#E9ECEF',
     },
     modalTitle: {
       ...styles.modalTitle,
-      color: isDark ? '#FFF' : '#000',
+      color: '#1C1C1E',
+    },
+    modalCloseButton: {
+      ...styles.modalCloseButton,
+      backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    },
+    modalCloseText: {
+      ...styles.modalCloseText,
+      color: '#000000',
     },
     nLevelOption: {
       ...styles.nLevelOption,
-      backgroundColor: isDark ? '#2A2A2A' : '#F9F9F9',
+      backgroundColor: '#F8F9FA',
+      borderWidth: 1,
+      borderColor: '#E9ECEF',
     },
     nLevelOptionText: {
       ...styles.nLevelOptionText,
-      color: isDark ? '#FFF' : '#000',
+      color: '#1C1C1E',
+    },
+    nLevelOptionTextLocked: {
+      ...styles.nLevelOptionTextLocked,
+      color: '#999',
+    },
+    premiumBadge: {
+      ...styles.premiumBadge,
+      backgroundColor: 'rgba(255, 215, 0, 0.2)',
+      borderColor: 'rgba(255, 215, 0, 0.4)',
+    },
+    premiumButton: {
+      ...styles.premiumButton,
+      backgroundColor: '#FFD700',
+      borderColor: '#FFA500',
     },
   };
   
@@ -125,156 +192,191 @@ export default function SettingsScreen() {
     <SafeAreaView style={dynamicStyles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={dynamicStyles.header}>
-          <Text style={styles.title}>{t.settings.title}</Text>
-          <Text style={styles.subtitle}>{t.settings.subtitle}</Text>
+          <Text style={dynamicStyles.title}>{t.settings.title}</Text>
+          <Text style={dynamicStyles.subtitle}>{t.settings.subtitle}</Text>
         </View>
         
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t.settings.trainingSettings}</Text>
+          <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t.settings.trainingSettings}</Text>
           
           <TouchableOpacity 
-            style={styles.settingRow}
+            style={[styles.settingRow, dynamicStyles.settingRow]}
             onPress={() => setShowNLevelModal(true)}
+            activeOpacity={0.7}
           >
             <View style={styles.settingRowContent}>
-              <Text style={styles.settingIcon}>⚙️</Text>
+              <View style={dynamicStyles.iconContainer}>
+                <Text style={styles.settingIcon}>⚙️</Text>
+              </View>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingLabel}>{t.settings.fixedNLevel}</Text>
-                <Text style={styles.settingDescription}>{t.settings.fixedNDescription}</Text>
+                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.fixedNLevel}</Text>
+                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.fixedNDescription}</Text>
                 {!settings.isPremium && settings.fixedN > 2 && (
-                  <Text style={styles.premiumBadge}>{t.settings.premiumTrial}</Text>
+                  <View style={styles.premiumBadgeContainer}>
+                    <Text style={dynamicStyles.premiumBadge}>{t.settings.premiumTrial}</Text>
+                  </View>
                 )}
               </View>
             </View>
-            <View style={styles.settingValueContainer}>
-              <Text style={styles.settingValue}>N={settings.fixedN}</Text>
-              <Text style={styles.settingArrow}>›</Text>
+            <View style={dynamicStyles.settingValueContainer}>
+              <Text style={dynamicStyles.settingValue}>N={settings.fixedN}</Text>
+              <Text style={[styles.settingArrow, dynamicStyles.settingValue]}>›</Text>
             </View>
           </TouchableOpacity>
           
-          <View style={styles.settingRow}>
+          <View style={[styles.settingRow, dynamicStyles.settingRow]}>
             <View style={styles.settingRowContent}>
-              <Text style={styles.settingIcon}>🎯</Text>
+              <View style={dynamicStyles.iconContainer}>
+                <Text style={styles.settingIcon}>🎯</Text>
+              </View>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingLabel}>{t.settings.adaptiveNLevel}</Text>
-                <Text style={styles.settingDescription}>{t.settings.adaptiveNDescription}</Text>
+                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.adaptiveNLevel}</Text>
+                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.adaptiveNDescription}</Text>
               </View>
             </View>
-            <Text style={styles.settingValue}>{settings.initialN}</Text>
+            <View style={dynamicStyles.settingValueDisplay}>
+              <Text style={dynamicStyles.settingValue}>{settings.initialN}</Text>
+            </View>
           </View>
           
-          <View style={styles.settingRow}>
+          <View style={[styles.settingRow, dynamicStyles.settingRow]}>
             <View style={styles.settingRowContent}>
-              <Text style={styles.settingIcon}>🔢</Text>
+              <View style={dynamicStyles.iconContainer}>
+                <Text style={styles.settingIcon}>🔢</Text>
+              </View>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingLabel}>Trial Count</Text>
-                <Text style={styles.settingDescription}>Number of trials per session</Text>
+                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>Trial Count</Text>
+                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>Number of trials per session</Text>
               </View>
             </View>
-            <Text style={styles.settingValue}>{settings.trialCount}</Text>
+            <View style={dynamicStyles.settingValueDisplay}>
+              <Text style={dynamicStyles.settingValue}>{settings.trialCount}</Text>
+            </View>
           </View>
           
-          <View style={styles.settingRow}>
+          <View style={[styles.settingRow, dynamicStyles.settingRow]}>
             <View style={styles.settingRowContent}>
-              <Text style={styles.settingIcon}>⏱️</Text>
+              <View style={dynamicStyles.iconContainer}>
+                <Text style={styles.settingIcon}>⏱️</Text>
+              </View>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingLabel}>Stimulus Duration</Text>
-                <Text style={styles.settingDescription}>How long each stimulus is shown</Text>
+                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>Stimulus Duration</Text>
+                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>How long each stimulus is shown</Text>
               </View>
             </View>
-            <Text style={styles.settingValue}>{settings.stimulusDuration}ms</Text>
+            <View style={dynamicStyles.settingValueDisplay}>
+              <Text style={dynamicStyles.settingValue}>{settings.stimulusDuration}ms</Text>
+            </View>
           </View>
         </View>
         
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t.settings.audioFeedback}</Text>
+          <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t.settings.audioFeedback}</Text>
           
-          <View style={styles.settingRow}>
+          <View style={[styles.settingRow, dynamicStyles.settingRow]}>
             <View style={styles.settingRowContent}>
-              <Text style={styles.settingIcon}>🔊</Text>
+              <View style={dynamicStyles.iconContainer}>
+                <Text style={styles.settingIcon}>🔊</Text>
+              </View>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingLabel}>{t.settings.soundEnabled}</Text>
-                <Text style={styles.settingDescription}>{t.settings.soundDescription}</Text>
+                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.soundEnabled}</Text>
+                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.soundDescription}</Text>
               </View>
             </View>
-            <Switch
-              value={settings.soundEnabled}
-              onValueChange={(value) => updateSettings({ soundEnabled: value })}
-              trackColor={{ false: '#2A2A2A', true: '#007AFF' }}
-              thumbColor={settings.soundEnabled ? '#FFF' : '#888'}
-              ios_backgroundColor={'#2A2A2A'}
-            />
+            <View style={dynamicStyles.switchContainer}>
+              <Switch
+                value={settings.soundEnabled}
+                onValueChange={(value) => updateSettings({ soundEnabled: value })}
+                trackColor={{ false: '#E9E9EA', true: '#007AFF' }}
+                thumbColor={settings.soundEnabled ? '#FFF' : '#F2F2F2'}
+                ios_backgroundColor="#E9E9EA"
+              />
+            </View>
           </View>
           
-          <View style={styles.settingRow}>
+          <View style={[styles.settingRow, dynamicStyles.settingRow]}>
             <View style={styles.settingRowContent}>
-              <Text style={styles.settingIcon}>📳</Text>
+              <View style={dynamicStyles.iconContainer}>
+                <Text style={styles.settingIcon}>📳</Text>
+              </View>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingLabel}>{t.settings.vibration}</Text>
-                <Text style={styles.settingDescription}>{t.settings.vibrationDescription}</Text>
+                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.vibration}</Text>
+                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.vibrationDescription}</Text>
               </View>
             </View>
-            <Switch
-              value={settings.vibrationEnabled}
-              onValueChange={(value) => updateSettings({ vibrationEnabled: value })}
-              trackColor={{ false: '#2A2A2A', true: '#007AFF' }}
-              thumbColor={settings.vibrationEnabled ? '#FFF' : '#888'}
-              ios_backgroundColor={'#2A2A2A'}
-            />
+            <View style={dynamicStyles.switchContainer}>
+              <Switch
+                value={settings.vibrationEnabled}
+                onValueChange={(value) => updateSettings({ vibrationEnabled: value })}
+                trackColor={{ false: '#E9E9EA', true: '#007AFF' }}
+                thumbColor={settings.vibrationEnabled ? '#FFF' : '#F2F2F2'}
+                ios_backgroundColor="#E9E9EA"
+              />
+            </View>
           </View>
           
-          <View style={styles.settingRow}>
+          <View style={[styles.settingRow, dynamicStyles.settingRow]}>
             <View style={styles.settingRowContent}>
-              <Text style={styles.settingIcon}>🔤</Text>
+              <View style={dynamicStyles.iconContainer}>
+                <Text style={styles.settingIcon}>🔤</Text>
+              </View>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingLabel}>{t.settings.showLetters}</Text>
-                <Text style={styles.settingDescription}>{t.settings.showLettersDescription}</Text>
+                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.showLetters}</Text>
+                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.showLettersDescription}</Text>
               </View>
             </View>
-            <Switch
-              value={settings.showLetters}
-              onValueChange={(value) => updateSettings({ showLetters: value })}
-              trackColor={{ false: '#2A2A2A', true: '#007AFF' }}
-              thumbColor={settings.showLetters ? '#FFF' : '#888'}
-              ios_backgroundColor={'#2A2A2A'}
-            />
+            <View style={dynamicStyles.switchContainer}>
+              <Switch
+                value={settings.showLetters}
+                onValueChange={(value) => updateSettings({ showLetters: value })}
+                trackColor={{ false: '#E9E9EA', true: '#007AFF' }}
+                thumbColor={settings.showLetters ? '#FFF' : '#F2F2F2'}
+                ios_backgroundColor="#E9E9EA"
+              />
+            </View>
           </View>
         </View>
         
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t.settings.appearance}</Text>
+          <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t.settings.appearance}</Text>
           
           <TouchableOpacity 
-            style={styles.settingRow}
+            style={[styles.settingRow, dynamicStyles.settingRow]}
             onPress={() => updateSettings({ theme: settings.theme === 'dark' ? 'light' : 'dark' })}
+            activeOpacity={0.7}
           >
             <View style={styles.settingRowContent}>
-              <Text style={styles.settingIcon}>{settings.theme === 'dark' ? '🌙' : '☀️'}</Text>
+              <View style={dynamicStyles.iconContainer}>
+                <Text style={styles.settingIcon}>{settings.theme === 'dark' ? '🌙' : '☀️'}</Text>
+              </View>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingLabel}>{t.settings.theme}</Text>
-                <Text style={styles.settingDescription}>{t.settings.themeDescription}</Text>
+                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.theme}</Text>
+                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.themeDescription}</Text>
               </View>
             </View>
-            <View style={styles.settingValueContainer}>
-              <Text style={styles.settingValue}>{settings.theme === 'dark' ? t.general.dark : t.general.light}</Text>
-              <Text style={styles.settingArrow}>›</Text>
+            <View style={dynamicStyles.settingValueContainer}>
+              <Text style={dynamicStyles.settingValue}>{settings.theme === 'dark' ? t.general.dark : t.general.light}</Text>
+              <Text style={[styles.settingArrow, dynamicStyles.settingValue]}>›</Text>
             </View>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={styles.settingRow}
+            style={[styles.settingRow, dynamicStyles.settingRow]}
             onPress={() => setShowLanguageModal(true)}
+            activeOpacity={0.7}
           >
             <View style={styles.settingRowContent}>
-              <Text style={styles.settingIcon}>🌍</Text>
+              <View style={dynamicStyles.iconContainer}>
+                <Text style={styles.settingIcon}>🌍</Text>
+              </View>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingLabel}>{t.settings.language}</Text>
-                <Text style={styles.settingDescription}>{t.settings.languageDescription}</Text>
+                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.language}</Text>
+                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.languageDescription}</Text>
               </View>
             </View>
-            <View style={styles.settingValueContainer}>
-              <Text style={styles.settingValue}>{settings.language === 'ja' ? t.general.japanese : t.general.english}</Text>
-              <Text style={styles.settingArrow}>›</Text>
+            <View style={dynamicStyles.settingValueContainer}>
+              <Text style={dynamicStyles.settingValue}>{settings.language === 'ja' ? t.general.japanese : t.general.english}</Text>
+              <Text style={[styles.settingArrow, dynamicStyles.settingValue]}>›</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -287,15 +389,15 @@ export default function SettingsScreen() {
         animationType="slide"
         onRequestClose={() => setShowNLevelModal(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>{t.settings.selectNLevel}</Text>
+        <View style={dynamicStyles.modalOverlay}>
+          <View style={dynamicStyles.modalContent}>
+            <View style={dynamicStyles.modalHeader}>
+              <Text style={dynamicStyles.modalTitle}>{t.settings.selectNLevel}</Text>
               <TouchableOpacity 
-                style={styles.modalCloseButton}
+                style={dynamicStyles.modalCloseButton}
                 onPress={() => setShowNLevelModal(false)}
               >
-                <Text style={styles.modalCloseText}>✕</Text>
+                <Text style={dynamicStyles.modalCloseText}>✕</Text>
               </TouchableOpacity>
             </View>
             
@@ -305,7 +407,7 @@ export default function SettingsScreen() {
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[
-                    styles.nLevelOption,
+                    dynamicStyles.nLevelOption,
                     settings.fixedN === item.value && styles.nLevelOptionSelected,
                     item.premium && !settings.isPremium && styles.nLevelOptionLocked
                   ]}
@@ -313,9 +415,9 @@ export default function SettingsScreen() {
                 >
                   <View style={styles.nLevelOptionContent}>
                     <Text style={[
-                      styles.nLevelOptionText,
+                      dynamicStyles.nLevelOptionText,
                       settings.fixedN === item.value && styles.nLevelOptionTextSelected,
-                      item.premium && !settings.isPremium && styles.nLevelOptionTextLocked
+                      item.premium && !settings.isPremium && dynamicStyles.nLevelOptionTextLocked
                     ]}>
                       {item.label}
                     </Text>
@@ -332,7 +434,7 @@ export default function SettingsScreen() {
             
             {!settings.isPremium && (
               <TouchableOpacity 
-                style={styles.premiumButton}
+                style={dynamicStyles.premiumButton}
                 onPress={handlePremiumUpgrade}
               >
                 <Text style={styles.premiumButtonText}>
@@ -354,15 +456,15 @@ export default function SettingsScreen() {
         animationType="slide"
         onRequestClose={() => setShowLanguageModal(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>{t.settings.language}</Text>
+        <View style={dynamicStyles.modalOverlay}>
+          <View style={dynamicStyles.modalContent}>
+            <View style={dynamicStyles.modalHeader}>
+              <Text style={dynamicStyles.modalTitle}>{t.settings.language}</Text>
               <TouchableOpacity 
-                style={styles.modalCloseButton}
+                style={dynamicStyles.modalCloseButton}
                 onPress={() => setShowLanguageModal(false)}
               >
-                <Text style={styles.modalCloseText}>✕</Text>
+                <Text style={dynamicStyles.modalCloseText}>✕</Text>
               </TouchableOpacity>
             </View>
             
@@ -372,14 +474,14 @@ export default function SettingsScreen() {
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[
-                    styles.nLevelOption,
+                    dynamicStyles.nLevelOption,
                     settings.language === item.value && styles.nLevelOptionSelected,
                   ]}
                   onPress={() => handleLanguageSelect(item.value as 'ja' | 'en')}
                 >
                   <View style={styles.nLevelOptionContent}>
                     <Text style={[
-                      styles.nLevelOptionText,
+                      dynamicStyles.nLevelOptionText,
                       settings.language === item.value && styles.nLevelOptionTextSelected,
                     ]}>
                       {item.label}
@@ -408,7 +510,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    paddingVertical: 40,
+    paddingVertical: 50,
     paddingHorizontal: 20,
     backgroundColor: '#007AFF',
   },
@@ -425,88 +527,111 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   section: {
-    marginBottom: 16,
-    marginHorizontal: 16,
+    marginBottom: 24,
+    marginHorizontal: 20,
   },
   sectionTitle: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '800',
     color: '#007AFF',
-    marginBottom: 16,
+    marginBottom: 20,
     marginTop: 32,
-    marginLeft: 8,
+    marginLeft: 4,
     textTransform: 'uppercase',
-    letterSpacing: 1.2,
+    letterSpacing: 1.5,
   },
   settingRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 24,
     backgroundColor: '#1A1A1A',
-    borderRadius: 12,
-    marginBottom: 2,
-    minHeight: 64,
-    borderWidth: 1,
-    borderColor: '#2A2A2A',
+    borderRadius: 16,
+    marginBottom: 12,
+    minHeight: 72,
+    borderWidth: 0,
   },
   settingRowContent: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
   },
-  settingIcon: {
-    fontSize: 20,
+  iconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(0, 122, 255, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 16,
-    width: 24,
+  },
+  settingIcon: {
+    fontSize: 22,
     textAlign: 'center',
   },
   settingInfo: {
     flex: 1,
   },
   settingLabel: {
-    fontSize: 17,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: '700',
     color: '#FFF',
-    marginBottom: 2,
+    marginBottom: 4,
   },
   settingDescription: {
-    fontSize: 13,
+    fontSize: 14,
     color: '#888',
-    lineHeight: 18,
+    lineHeight: 20,
   },
   settingValue: {
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: '700',
     color: '#007AFF',
   },
   settingValueContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    backgroundColor: 'rgba(0, 122, 255, 0.15)',
-    paddingHorizontal: 12,
+    gap: 10,
+    backgroundColor: 'rgba(0, 122, 255, 0.12)',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: 'rgba(0, 122, 255, 0.2)',
+  },
+  settingValueDisplay: {
+    backgroundColor: 'rgba(0, 122, 255, 0.12)',
+    paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(0, 122, 255, 0.3)',
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: 'rgba(0, 122, 255, 0.2)',
+  },
+  switchContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    padding: 4,
+    borderRadius: 20,
   },
   settingArrow: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#007AFF',
-    fontWeight: '600',
+    fontWeight: '700',
+  },
+  premiumBadgeContainer: {
+    marginTop: 8,
   },
   premiumBadge: {
-    fontSize: 11,
+    fontSize: 12,
     color: '#FFD700',
-    fontWeight: '700',
-    marginTop: 4,
+    fontWeight: '800',
     backgroundColor: 'rgba(255, 215, 0, 0.2)',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
     alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 215, 0, 0.4)',
   },
   
   // Modal Styles

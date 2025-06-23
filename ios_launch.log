@@ -1333,3 +1333,205 @@ Call Stack
   App (<anonymous>)
   ErrorOverlay (<anonymous>)
  WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+[CoreAudio] 126487          HALC_ProxyIOContext.cpp:1630
+HALC_ProxyIOContext::IOWorkLoop: context 12372 received an out of order message
+(got 8 want: 1)
+[CoreAudio] 126487          HALC_ProxyIOContext.cpp:1622
+HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
+[CoreAudio] 126487          HALC_ProxyIOContext.cpp:1622
+HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
+[CoreAudio] 126487          HALC_ProxyIOContext.cpp:1622
+HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
+[CoreAudio] 126487          HALC_ProxyIOContext.cpp:1622
+HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+[CoreAudio] 160807          HALC_ProxyIOContext.cpp:1630
+HALC_ProxyIOContext::IOWorkLoop: context 12372 received an out of order message
+(got 187 want: 1)
+[PlugInKit] <PKDaemonClient: 0x60000040f5e0>: XPC error talking to pkd:
+Connection interrupted
+[CoreAudio] 116315          HALC_ProxyIOContext.cpp:1630
+HALC_ProxyIOContext::IOWorkLoop: context 12372 received an out of order message
+(got 31 want: 1)
+[CoreAudio] 116315          HALC_ProxyIOContext.cpp:1622
+HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
+[CoreAudio] 116315          HALC_ProxyIOContext.cpp:1622
+HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+iOS node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 397ms node_modules/expo-router/entry.js (1 module)
+[CoreFoundation] AddInstanceForFactory: No factory registered for id <CFUUID
+0x600000320560> F8BB1C28-BAE8-11D6-9C31-00039315CD46
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+[SiriTTSService] Failed to get sandbox extensions
+[SiriTTSService] Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice
+failed: 2
+[SiriTTSService] #FactoryInstall Unable to query results, error: 5
+[SiriTTSService] Query for com.apple.MobileAsset.VoiceServices.GryphonVoice
+failed: 2
+[SiriTTSService] Query for com.apple.MobileAsset.VoiceServices.GryphonVoice
+failed: 2
+ ERROR  Warning: TypeError: session.startedAt.toISOString is not a function (it is undefined)
+
+This error is located at:
+
+[0m [90m 30 |[39m
+ [90m 31 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mStatsScreen[39m() {
+[31m[1m>[22m[39m[90m 32 |[39m   [36mconst[39m { settings } [33m=[39m useSettingsStore()[33m;[39m
+ [90m    |[39m                                        [31m[1m^[22m[39m
+ [90m 33 |[39m   [36mconst[39m { 
+ [90m 34 |[39m     getRecentSessions[33m,[39m 
+ [90m 35 |[39m     getBestNLevel[33m,[39m [0m
+
+Call Stack
+  StatsScreen (app/(tabs)/stats.tsx:32:40)
+  TabLayout (app/(tabs)/_layout.tsx:21:43)
+  ScreenContentWrapper (<anonymous>)
+  RNSScreenStack (<anonymous>)
+  RootLayoutNav (app/_layout.tsx:50:43)
+  RootLayout (app/_layout.tsx:26:35)
+  ErrorBoundary(./_layout.tsx) (<anonymous>)
+  RNCSafeAreaProvider (<anonymous>)
+  App (<anonymous>)
+  ErrorOverlay (<anonymous>)
+[SiriTTSService] Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice
+failed: 2
+[SiriTTSService] Query for com.apple.MobileAsset.VoiceServices.GryphonVoice
+failed: 2
+[SiriTTSService] Query for com.apple.MobileAsset.VoiceServices.GryphonVoice
+failed: 2
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+[SiriTTSService] Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice
+failed: 2
+[SiriTTSService] Query for com.apple.MobileAsset.VoiceServices.GryphonVoice
+failed: 2
+[SiriTTSService] Query for com.apple.MobileAsset.VoiceServices.GryphonVoice
+failed: 2
+ ERROR  Warning: TypeError: session.startedAt.toISOString is not a function (it is undefined)
+
+This error is located at:
+
+[0m [90m 30 |[39m
+ [90m 31 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mStatsScreen[39m() {
+[31m[1m>[22m[39m[90m 32 |[39m   [36mconst[39m { settings } [33m=[39m useSettingsStore()[33m;[39m
+ [90m    |[39m                                        [31m[1m^[22m[39m
+ [90m 33 |[39m   [36mconst[39m { 
+ [90m 34 |[39m     getRecentSessions[33m,[39m 
+ [90m 35 |[39m     getBestNLevel[33m,[39m [0m
+
+Call Stack
+  StatsScreen (app/(tabs)/stats.tsx:32:40)
+  TabLayout (app/(tabs)/_layout.tsx:21:43)
+  ScreenContentWrapper (<anonymous>)
+  RNSScreenStack (<anonymous>)
+  RootLayoutNav (app/_layout.tsx:50:43)
+  RootLayout (app/_layout.tsx:26:35)
+  ErrorBoundary(./_layout.tsx) (<anonymous>)
+  RNCSafeAreaProvider (<anonymous>)
+  App (<anonymous>)
+  ErrorOverlay (<anonymous>)
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ ERROR  Warning: TypeError: session.startedAt.toISOString is not a function (it is undefined)
+
+This error is located at:
+
+[0m [90m 30 |[39m
+ [90m 31 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mStatsScreen[39m() {
+[31m[1m>[22m[39m[90m 32 |[39m   [36mconst[39m { settings } [33m=[39m useSettingsStore()[33m;[39m
+ [90m    |[39m                                        [31m[1m^[22m[39m
+ [90m 33 |[39m   [36mconst[39m { 
+ [90m 34 |[39m     getRecentSessions[33m,[39m 
+ [90m 35 |[39m     getBestNLevel[33m,[39m [0m
+
+Call Stack
+  StatsScreen (app/(tabs)/stats.tsx:32:40)
+  TabLayout (app/(tabs)/_layout.tsx:21:43)
+  ScreenContentWrapper (<anonymous>)
+  RNSScreenStack (<anonymous>)
+  RootLayoutNav (app/_layout.tsx:50:43)
+  RootLayout (app/_layout.tsx:26:35)
+  ErrorBoundary(./_layout.tsx) (<anonymous>)
+  RNCSafeAreaProvider (<anonymous>)
+  App (<anonymous>)
+  ErrorOverlay (<anonymous>)
+ WARN  [Layout children]: No route named "training/[mode]" exists in nested children: ["+not-found", "modal", "test", "_sitemap", "(tabs)", "training/adaptive", "training/fixed"]
+ ERROR  Warning: TypeError: session.startedAt.toISOString is not a function (it is undefined)
+
+This error is located at:
+
+[0m [90m 30 |[39m
+ [90m 31 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mStatsScreen[39m() {
+[31m[1m>[22m[39m[90m 32 |[39m   [36mconst[39m { settings } [33m=[39m useSettingsStore()[33m;[39m
+ [90m    |[39m                                        [31m[1m^[22m[39m
+ [90m 33 |[39m   [36mconst[39m { 
+ [90m 34 |[39m     getRecentSessions[33m,[39m 
+ [90m 35 |[39m     getBestNLevel[33m,[39m [0m
+
+Call Stack
+  StatsScreen (app/(tabs)/stats.tsx:32:40)
+  TabLayout (app/(tabs)/_layout.tsx:21:43)
+  ScreenContentWrapper (<anonymous>)
+  RNSScreenStack (<anonymous>)
+  RootLayoutNav (app/_layout.tsx:50:43)
+  RootLayout (app/_layout.tsx:26:35)
+  ErrorBoundary(./_layout.tsx) (<anonymous>)
+  RNCSafeAreaProvider (<anonymous>)
+  App (<anonymous>)
+  ErrorOverlay (<anonymous>)

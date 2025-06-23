@@ -60,7 +60,11 @@ export const useStatsStore = create<StatsState>()(
       
       getRecentSessions: (limit = 10) => {
         return get().sessions
-          .sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime())
+          .sort((a, b) => {
+            const dateA = new Date(a.startedAt);
+            const dateB = new Date(b.startedAt);
+            return dateB.getTime() - dateA.getTime();
+          })
           .slice(0, limit);
       },
       
@@ -159,19 +163,29 @@ export const useStatsStore = create<StatsState>()(
         const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
         
         // Weekly average
-        const weekSessions = sessions.filter(s => s.startedAt >= oneWeekAgo);
+        const weekSessions = sessions.filter(s => {
+          const sessionDate = new Date(s.startedAt);
+          return sessionDate >= oneWeekAgo;
+        });
         const weeklyAverage = weekSessions.length > 0 
           ? Math.round(weekSessions.reduce((sum, s) => sum + s.accuracy, 0) / weekSessions.length)
           : 0;
         
         // Monthly average
-        const monthSessions = sessions.filter(s => s.startedAt >= oneMonthAgo);
+        const monthSessions = sessions.filter(s => {
+          const sessionDate = new Date(s.startedAt);
+          return sessionDate >= oneMonthAgo;
+        });
         const monthlyAverage = monthSessions.length > 0 
           ? Math.round(monthSessions.reduce((sum, s) => sum + s.accuracy, 0) / monthSessions.length)
           : 0;
         
         // Improvement rate (compare first half vs second half of sessions)
-        const sortedSessions = sessions.sort((a, b) => a.startedAt.getTime() - b.startedAt.getTime());
+        const sortedSessions = sessions.sort((a, b) => {
+          const dateA = new Date(a.startedAt);
+          const dateB = new Date(b.startedAt);
+          return dateA.getTime() - dateB.getTime();
+        });
         const midPoint = Math.floor(sortedSessions.length / 2);
         const firstHalf = sortedSessions.slice(0, midPoint);
         const secondHalf = sortedSessions.slice(midPoint);
