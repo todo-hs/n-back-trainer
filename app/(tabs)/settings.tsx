@@ -139,7 +139,7 @@ export default function SettingsScreen() {
   const nLevelOptions = [
     { value: 1, label: t.nLevels.n1, premium: false },
     { value: 2, label: t.nLevels.n2, premium: false },
-    { value: 3, label: t.nLevels.n3, premium: true },
+    { value: 3, label: t.nLevels.n3, premium: false },
     { value: 4, label: t.nLevels.n4, premium: true },
     { value: 5, label: t.nLevels.n5, premium: true },
     { value: 6, label: t.nLevels.n6, premium: true },
@@ -158,8 +158,8 @@ export default function SettingsScreen() {
       Alert.alert(
         t.settings.premiumFeature,
         settings.language === 'ja' 
-          ? 'N=3以上の高難易度レベルはプレミアム会員限定です。\n\n月額300円でアンロックしますか？'
-          : 'N=3+ high difficulty levels are for premium members only.\n\nUnlock for $3/month?',
+          ? 'N=4以上の高難易度レベルはプレミアム会員限定です。\n\n月額300円でアンロックしますか？'
+          : 'N=4+ high difficulty levels are for premium members only.\n\nUnlock for $3/month?',
         [
           { text: t.settings.cancel, style: 'cancel' },
           { text: t.settings.premiumUpgrade.replace('🚀 ', ''), onPress: () => handlePremiumUpgrade() }
@@ -211,7 +211,7 @@ export default function SettingsScreen() {
               <View style={styles.settingInfo}>
                 <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.fixedNLevel}</Text>
                 <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.fixedNDescription}</Text>
-                {!settings.isPremium && settings.fixedN > 2 && (
+                {!settings.isPremium && settings.fixedN > 3 && (
                   <View style={styles.premiumBadgeContainer}>
                     <Text style={dynamicStyles.premiumBadge}>{t.settings.premiumTrial}</Text>
                   </View>
@@ -224,75 +224,10 @@ export default function SettingsScreen() {
             </View>
           </TouchableOpacity>
           
-          <View style={[styles.settingRow, dynamicStyles.settingRow]}>
-            <View style={styles.settingRowContent}>
-              <View style={dynamicStyles.iconContainer}>
-                <Text style={styles.settingIcon}>🎯</Text>
-              </View>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.adaptiveNLevel}</Text>
-                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.adaptiveNDescription}</Text>
-              </View>
-            </View>
-            <View style={dynamicStyles.settingValueDisplay}>
-              <Text style={dynamicStyles.settingValue}>{settings.initialN}</Text>
-            </View>
-          </View>
-          
-          <View style={[styles.settingRow, dynamicStyles.settingRow]}>
-            <View style={styles.settingRowContent}>
-              <View style={dynamicStyles.iconContainer}>
-                <Text style={styles.settingIcon}>🔢</Text>
-              </View>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>Trial Count</Text>
-                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>Number of trials per session</Text>
-              </View>
-            </View>
-            <View style={dynamicStyles.settingValueDisplay}>
-              <Text style={dynamicStyles.settingValue}>{settings.trialCount}</Text>
-            </View>
-          </View>
-          
-          <View style={[styles.settingRow, dynamicStyles.settingRow]}>
-            <View style={styles.settingRowContent}>
-              <View style={dynamicStyles.iconContainer}>
-                <Text style={styles.settingIcon}>⏱️</Text>
-              </View>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>Stimulus Duration</Text>
-                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>How long each stimulus is shown</Text>
-              </View>
-            </View>
-            <View style={dynamicStyles.settingValueDisplay}>
-              <Text style={dynamicStyles.settingValue}>{settings.stimulusDuration}ms</Text>
-            </View>
-          </View>
         </View>
         
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t.settings.audioFeedback}</Text>
-          
-          <View style={[styles.settingRow, dynamicStyles.settingRow]}>
-            <View style={styles.settingRowContent}>
-              <View style={dynamicStyles.iconContainer}>
-                <Text style={styles.settingIcon}>🔊</Text>
-              </View>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.soundEnabled}</Text>
-                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.soundDescription}</Text>
-              </View>
-            </View>
-            <View style={dynamicStyles.switchContainer}>
-              <Switch
-                value={settings.soundEnabled}
-                onValueChange={(value) => updateSettings({ soundEnabled: value })}
-                trackColor={{ false: '#E9E9EA', true: '#007AFF' }}
-                thumbColor={settings.soundEnabled ? '#FFF' : '#F2F2F2'}
-                ios_backgroundColor="#E9E9EA"
-              />
-            </View>
-          </View>
           
           <View style={[styles.settingRow, dynamicStyles.settingRow]}>
             <View style={styles.settingRowContent}>
@@ -315,26 +250,6 @@ export default function SettingsScreen() {
             </View>
           </View>
           
-          <View style={[styles.settingRow, dynamicStyles.settingRow]}>
-            <View style={styles.settingRowContent}>
-              <View style={dynamicStyles.iconContainer}>
-                <Text style={styles.settingIcon}>🔤</Text>
-              </View>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.showLetters}</Text>
-                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.showLettersDescription}</Text>
-              </View>
-            </View>
-            <View style={dynamicStyles.switchContainer}>
-              <Switch
-                value={settings.showLetters}
-                onValueChange={(value) => updateSettings({ showLetters: value })}
-                trackColor={{ false: '#E9E9EA', true: '#007AFF' }}
-                thumbColor={settings.showLetters ? '#FFF' : '#F2F2F2'}
-                ios_backgroundColor="#E9E9EA"
-              />
-            </View>
-          </View>
         </View>
         
         <View style={styles.section}>

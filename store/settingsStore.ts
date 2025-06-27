@@ -16,7 +16,7 @@ const defaultSettings: UserSettings = {
   stimulusDuration: 1000,
   responseWindow: 1000,
   theme: 'dark',
-  soundEnabled: true,
+  soundEnabled: true, // Always enabled
   vibrationEnabled: true,
   language: 'ja', // Default to Japanese
   isPremium: false, // Default to free user
@@ -29,7 +29,11 @@ export const useSettingsStore = create<SettingsState>()(
       settings: defaultSettings,
       updateSettings: (newSettings) =>
         set((state) => ({
-          settings: { ...state.settings, ...newSettings },
+          settings: { 
+            ...state.settings, 
+            ...newSettings,
+            soundEnabled: true // Always keep sound enabled
+          },
         })),
       resetSettings: () => set({ settings: defaultSettings }),
     }),

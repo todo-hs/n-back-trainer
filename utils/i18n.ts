@@ -114,7 +114,7 @@ export interface Translations {
 export const translations: Record<'ja' | 'en', Translations> = {
   ja: {
     home: {
-      title: 'Dual N-Back Trainer',
+      title: 'N-BackShift',
       subtitle: '記憶力と集中力を鍛える認知トレーニング',
       rulesTitle: 'ゲームのルール',
       rulesText: '位置と文字を記憶して、N個前に出た内容と同じものを見つけよう！',
@@ -126,8 +126,8 @@ export const translations: Record<'ja' | 'en', Translations> = {
       fixedDetail: '基礎練習・安定した訓練に最適',
     },
     training: {
-      adaptive: '適応型 N-Back トレーニング',
-      fixed: '固定型 N-Back トレーニング',
+      adaptive: '適応型 N-BackShift トレーニング',
+      fixed: '固定型 N-BackShift トレーニング',
       level: 'N-レベル',
       trial: '試行',
       score: 'スコア',
@@ -170,11 +170,11 @@ export const translations: Record<'ja' | 'en', Translations> = {
       selectNLevel: '固定型 N-レベル選択',
       premiumFeature: 'プレミアム機能',
       premiumUpgrade: '🚀 プレミアムにアップグレード',
-      premiumPrice: '月額300円でN=3-9を解除',
+      premiumPrice: '月額300円でN=4-9を解除',
       cancel: 'キャンセル',
       ok: 'OK',
       developmentMode: '開発中',
-      freeTrialMessage: 'プレミアム機能は現在開発中です。\n\n今回は無料でN=3-9をお試しできます！',
+      freeTrialMessage: 'プレミアム機能は現在開発中です。\n\n今回は無料でN=4-9をお試しできます！',
     },
     nLevels: {
       n1: 'N=1 (超簡単)',
@@ -214,7 +214,7 @@ export const translations: Record<'ja' | 'en', Translations> = {
   
   en: {
     home: {
-      title: 'Dual N-Back Trainer',
+      title: 'N-BackShift',
       subtitle: 'Cognitive training to improve memory and focus',
       rulesTitle: 'Game Rules',
       rulesText: 'Remember positions and letters, then find matches from N trials back!',
@@ -226,8 +226,8 @@ export const translations: Record<'ja' | 'en', Translations> = {
       fixedDetail: 'Perfect for basic practice and stable training',
     },
     training: {
-      adaptive: 'Adaptive N-Back Training',
-      fixed: 'Fixed N-Back Training',
+      adaptive: 'Adaptive N-BackShift Training',
+      fixed: 'Fixed N-BackShift Training',
       level: 'N-Level',
       trial: 'Trial',
       score: 'Score',
@@ -270,11 +270,11 @@ export const translations: Record<'ja' | 'en', Translations> = {
       selectNLevel: 'Select Fixed N-Level',
       premiumFeature: 'Premium Feature',
       premiumUpgrade: '🚀 Upgrade to Premium',
-      premiumPrice: '$3/month to unlock N=3-9',
+      premiumPrice: '$3/month to unlock N=4-9',
       cancel: 'Cancel',
       ok: 'OK',
       developmentMode: 'In Development',
-      freeTrialMessage: 'Premium features are currently in development.\n\nEnjoy a free trial of N=3-9 levels!',
+      freeTrialMessage: 'Premium features are currently in development.\n\nEnjoy a free trial of N=4-9 levels!',
     },
     nLevels: {
       n1: 'N=1 (Very Easy)',

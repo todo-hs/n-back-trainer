@@ -125,9 +125,13 @@ export const useStatsStore = create<StatsState>()(
       getNLevelProgression: () => {
         const sessions = get().sessions;
         return sessions
-          .sort((a, b) => a.startedAt.getTime() - b.startedAt.getTime())
+          .sort((a, b) => {
+            const dateA = new Date(a.startedAt);
+            const dateB = new Date(b.startedAt);
+            return dateA.getTime() - dateB.getTime();
+          })
           .map(session => ({
-            date: session.startedAt.toISOString().split('T')[0], // YYYY-MM-DD format
+            date: new Date(session.startedAt).toISOString().split('T')[0], // YYYY-MM-DD format
             nLevel: session.nLevel,
             mode: session.mode,
           }));
@@ -136,11 +140,15 @@ export const useStatsStore = create<StatsState>()(
       getAccuracyTrend: (limit = 20) => {
         const sessions = get().sessions;
         return sessions
-          .sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime()) // Most recent first
+          .sort((a, b) => {
+            const dateA = new Date(a.startedAt);
+            const dateB = new Date(b.startedAt);
+            return dateB.getTime() - dateA.getTime(); // Most recent first
+          })
           .slice(0, limit)
           .reverse() // Chronological order for trend
           .map(session => ({
-            date: session.startedAt.toISOString().split('T')[0],
+            date: new Date(session.startedAt).toISOString().split('T')[0],
             accuracy: session.accuracy,
             nLevel: session.nLevel,
             mode: session.mode,

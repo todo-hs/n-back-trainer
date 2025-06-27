@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Alert, Animated, Vibration } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import * as Speech from 'expo-speech';
 import * as Haptics from 'expo-haptics';
 import { useSettingsStore } from '@/store/settingsStore';
@@ -42,8 +42,8 @@ export default function FixedTrainingScreen() {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   
   // Constants
-  const STIMULUS_DURATION = 500; // 500ms to show stimulus
-  const INTER_STIMULUS_INTERVAL = 2500; // Total time per trial
+  const STIMULUS_DURATION = 800; // 800ms to show stimulus
+  const INTER_STIMULUS_INTERVAL = 3000; // Total time per trial (3 seconds)
   const TOTAL_TRIALS = 20;
   // Optimal letter count based on N-level for effective training
   const getOptimalLetters = (nLevel: number) => {
@@ -57,6 +57,9 @@ export default function FixedTrainingScreen() {
   const generateTrials = (n: number, totalTrials: number) => {
     const newTrials: Trial[] = [];
     const letters = getOptimalLetters(n);
+    
+    // 8 positions excluding center (position 4) in 3x3 grid
+    const validPositions = [0, 1, 2, 3, 5, 6, 7, 8]; // Skip center position 4
     
     // Target 40% match rate for effective training
     const targetMatches = Math.floor(totalTrials * 0.4);
@@ -80,7 +83,7 @@ export default function FixedTrainingScreen() {
           });
         } else {
           newTrials.push({
-            position: Math.floor(Math.random() * 9),
+            position: validPositions[Math.floor(Math.random() * validPositions.length)],
             letter: nBackTrial.letter
           });
         }
@@ -90,7 +93,7 @@ export default function FixedTrainingScreen() {
         let position, letter;
         let attempts = 0;
         do {
-          position = Math.floor(Math.random() * 9);
+          position = validPositions[Math.floor(Math.random() * validPositions.length)];
           letter = letters[Math.floor(Math.random() * letters.length)];
           attempts++;
         } while (attempts < 10 && i >= n && 
@@ -112,24 +115,75 @@ export default function FixedTrainingScreen() {
     // Remove response animation to prevent layout shifts
   };
 
-  // Start the game
-  const handleStartTraining = () => {
-    const newTrials = generateTrials(N_LEVEL, TOTAL_TRIALS);
-    setTrials(newTrials);
-    setCurrentTrial(0);
-    setIsRunning(true);
-    setScore({ correct: 0, total: 0 });
-    setVisualHits([]);
-    setAudioHits([]);
-    setSessionStartTime(new Date());
-    
-    // Reset animations
-    progressAnimation.setValue(0);
-    responseAnimation.setValue(0);
-    
-    // Haptic feedback for game start
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-  };
+
+  // Auto-start with delay when component mounts
+  // Initialize game when screen comes into focus (including first load and returning from back button)
+  useFocusEffect(
+    useCallback(() => {
+      console.log('Fixed mode: Screen focused, initializing game...');
+      
+      // Clear any existing timeouts first
+      if (intervalRef.current) {
+        clearTimeout(intervalRef.current);
+        intervalRef.current = null;
+      }
+      
+      // Force reset all states when screen is focused
+      setIsRunning(false);
+      setCurrentTrial(0);
+      setTrials([]);
+      setScore({ correct: 0, total: 0 });
+      setVisualHits([]);
+      setAudioHits([]);
+      setSessionStartTime(null);
+      setHighlightPosition(null);
+      setCurrentLetter('');
+      setShowingStimulus(false);
+      setCanRespond(false);
+      setButtonsPressed({visual: false, audio: false});
+      
+      // Reset animations
+      progressAnimation.setValue(0);
+      responseAnimation.setValue(0);
+      cellScale.setValue(1);
+
+      // Start a new game after delay
+      const startDelay = setTimeout(() => {
+        console.log('Fixed mode: Starting new game...');
+        
+        // Generate new trials
+        const newTrials = generateTrials(N_LEVEL, TOTAL_TRIALS);
+        
+        // Set initial state
+        setTrials(newTrials);
+        setCurrentTrial(0);
+        setScore({ correct: 0, total: 0 });
+        setVisualHits([]);
+        setAudioHits([]);
+        setSessionStartTime(new Date());
+        setHighlightPosition(null);
+        setCurrentLetter('');
+        setShowingStimulus(false);
+        setCanRespond(false);
+        setButtonsPressed({visual: false, audio: false});
+        setIsRunning(true); // Start the game
+        
+        console.log('Fixed mode: Game started with', newTrials.length, 'trials');
+        
+        // Haptic feedback
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      }, 3000);
+
+      return () => {
+        console.log('Fixed mode: Cleaning up focus effect...');
+        clearTimeout(startDelay);
+        if (intervalRef.current) {
+          clearTimeout(intervalRef.current);
+          intervalRef.current = null;
+        }
+      };
+    }, [])
+  );
 
   // Main game loop
   useEffect(() => {
@@ -167,7 +221,7 @@ export default function FixedTrainingScreen() {
     Speech.speak(trial.letter.toLowerCase(), {
       language: 'en-US',
       pitch: 1.0,
-      rate: 0.8,
+      rate: 0.6, // Slower speech rate for clarity
     });
     
     // Hide stimulus after duration
@@ -189,7 +243,7 @@ export default function FixedTrainingScreen() {
         clearTimeout(intervalRef.current);
       }
     };
-  }, [isRunning, currentTrial, trials]);
+  }, [isRunning, currentTrial, trials, N_LEVEL]);
 
   // Handle responses
   const handleVisualResponse = () => {
@@ -212,10 +266,6 @@ export default function FixedTrainingScreen() {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       animateResponse(true);
       
-      // Play success sound via speech
-      setTimeout(() => {
-        Speech.speak('Good', { language: 'en-US', pitch: 1.2, rate: 1.5 });
-      }, 100);
     } else {
       setScore(prev => ({ ...prev, total: prev.total + 1 }));
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
@@ -246,10 +296,6 @@ export default function FixedTrainingScreen() {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       animateResponse(true);
       
-      // Play success sound via speech
-      setTimeout(() => {
-        Speech.speak('Good', { language: 'en-US', pitch: 1.2, rate: 1.5 });
-      }, 100);
     } else {
       setScore(prev => ({ ...prev, total: prev.total + 1 }));
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
@@ -303,24 +349,58 @@ export default function FixedTrainingScreen() {
       t.training.sessionComplete,
       `${t.training.accuracy}: ${accuracy.toFixed(1)}%\n${t.training.correct}: ${score.correct}/${score.total}\n${t.training.level}: ${N_LEVEL} (${settings.language === 'ja' ? '固定' : 'Fixed'})`,
       [
-        { text: t.training.continue, onPress: () => handleStartTraining() },
-        { text: t.training.backToHome, onPress: () => router.push('/') }
+        { text: t.training.continue, onPress: () => {
+          // Restart game
+          const newTrials = generateTrials(N_LEVEL, TOTAL_TRIALS);
+          setTrials(newTrials);
+          setCurrentTrial(0);
+          setScore({ correct: 0, total: 0 });
+          setVisualHits([]);
+          setAudioHits([]);
+          setSessionStartTime(new Date());
+          setIsRunning(true);
+        } },
+        { text: t.training.backToHome, onPress: () => router.replace('/') }
       ]
     );
   };
 
   const handleBackToHome = () => {
+    // Complete reset - same as component mount reset
     if (intervalRef.current) {
       clearTimeout(intervalRef.current);
+      intervalRef.current = null;
     }
+    
+    // Reset all states completely
     setIsRunning(false);
-    router.push('/');
+    setCurrentTrial(0);
+    setTrials([]);
+    setScore({ correct: 0, total: 0 });
+    setVisualHits([]);
+    setAudioHits([]);
+    setSessionStartTime(null);
+    setHighlightPosition(null);
+    setCurrentLetter('');
+    setShowingStimulus(false);
+    setCanRespond(false);
+    setButtonsPressed({visual: false, audio: false});
+    
+    // Reset animations
+    progressAnimation.setValue(0);
+    responseAnimation.setValue(0);
+    cellScale.setValue(1);
+    
+    router.replace('/');
   };
 
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity style={styles.backArrowHeader} onPress={handleBackToHome}>
+        <Text style={styles.backArrowText}>◀︎</Text>
+      </TouchableOpacity>
+      
       <View style={styles.header}>
-        <Text style={styles.title}>{t.training.fixed}</Text>
         <Text style={styles.subtitle}>
           {t.training.level}: {N_LEVEL} (固定) | {t.training.trial}: {currentTrial + 1}/{TOTAL_TRIALS}
         </Text>
@@ -346,11 +426,13 @@ export default function FixedTrainingScreen() {
             <View key={rowIndex} style={styles.gridRow}>
               {Array.from({ length: 3 }).map((_, colIndex) => {
                 const cellIndex = rowIndex * 3 + colIndex;
+                const isCenter = cellIndex === 4;
                 return (
                   <View
                     key={cellIndex}
                     style={[
                       styles.gridCell,
+                      isCenter && styles.hiddenCell,
                       highlightPosition === cellIndex && showingStimulus && styles.highlightedCell,
                     ]}
                   />
@@ -362,12 +444,6 @@ export default function FixedTrainingScreen() {
       </View>
       
       <View style={styles.audioContainer}>
-        <Text style={styles.audioTitle}>
-          {showingStimulus && settings.showLetters ? currentLetter : ' '}
-        </Text>
-        <Text style={styles.audioLabel}>
-          {canRespond ? t.training.detectMessage : `${N_LEVEL}${t.training.waitMessage}`}
-        </Text>
       </View>
       
       <View style={styles.buttonContainer}>
@@ -380,7 +456,9 @@ export default function FixedTrainingScreen() {
           onPress={handleVisualResponse}
           disabled={!canRespond || !isRunning}
         >
-          <Text style={styles.buttonText}>{t.training.positionButton}</Text>
+          <Text style={styles.buttonText}>
+            <Text style={styles.buttonIcon}>👁️</Text>
+          </Text>
         </TouchableOpacity>
         
         <TouchableOpacity 
@@ -392,25 +470,12 @@ export default function FixedTrainingScreen() {
           onPress={handleAudioResponse}
           disabled={!canRespond || !isRunning}
         >
-          <Text style={styles.buttonText}>{t.training.letterButton}</Text>
+          <Text style={styles.buttonText}>
+            <Text style={styles.buttonIcon}>👂</Text>
+          </Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.controlContainer}>
-        {!isRunning ? (
-          <TouchableOpacity style={styles.startButton} onPress={handleStartTraining}>
-            <Text style={styles.buttonText}>{t.training.startButton}</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.stopButton} onPress={endGame}>
-            <Text style={styles.buttonText}>{t.training.stopButton}</Text>
-          </TouchableOpacity>
-        )}
-        
-        <TouchableOpacity style={styles.backButton} onPress={handleBackToHome}>
-          <Text style={styles.buttonText}>{t.training.backButton}</Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }
@@ -424,12 +489,24 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     marginBottom: 20,
+    marginTop: 10,
   },
-  title: {
+  backArrowHeader: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 20,
+    zIndex: 10,
+  },
+  backArrowText: {
     fontSize: 24,
-    fontWeight: '700',
     color: '#FFF',
-    textAlign: 'center',
+    fontWeight: '600',
   },
   subtitle: {
     fontSize: 16,
@@ -440,6 +517,9 @@ const styles = StyleSheet.create({
   gridContainer: {
     alignItems: 'center',
     marginBottom: 30,
+    flex: 1,
+    justifyContent: 'center',
+    marginTop: -50,
   },
   progressBarContainer: {
     width: 360,
@@ -478,13 +558,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
     borderRadius: 12,
   },
+  hiddenCell: {
+    backgroundColor: 'transparent',
+  },
   highlightedCell: {
     backgroundColor: '#FFD700', // Gold color for fixed mode
   },
   audioContainer: {
     alignItems: 'center',
     marginBottom: 30,
-    height: 100,
+    height: 0,
     justifyContent: 'center',
   },
   audioTitle: {
@@ -553,5 +636,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
+  },
+  buttonIcon: {
+    fontSize: 42,
+  },
+  buttonKanji: {
+    fontSize: 28,
+    fontWeight: '700',
   },
 });

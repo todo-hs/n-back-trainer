@@ -1,5 +1,5 @@
 {
-  "name": "n-back-trainer",
+  "name": "n-backshift",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
