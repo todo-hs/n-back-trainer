@@ -31,18 +31,6 @@ export default function HomeScreen() {
       ...styles.subtitle,
       color: isDark ? '#888888' : '#666666',
     },
-    modeExplanation: {
-      ...styles.modeExplanation,
-      backgroundColor: isDark ? '#1A1A1A' : '#F2F2F7',
-    },
-    explanationTitle: {
-      ...styles.explanationTitle,
-      color: isDark ? '#FFFFFF' : '#000000',
-    },
-    explanationText: {
-      ...styles.explanationText,
-      color: isDark ? '#CCCCCC' : '#666666',
-    },
   };
 
   return (
@@ -53,12 +41,6 @@ export default function HomeScreen() {
           {t.home.subtitle}
         </Text>
         
-        <View style={dynamicStyles.modeExplanation}>
-          <Text style={dynamicStyles.explanationTitle}>{t.home.rulesTitle}</Text>
-          <Text style={dynamicStyles.explanationText}>
-            {t.home.rulesText}
-          </Text>
-        </View>
         
         <TouchableOpacity style={styles.adaptiveButton} onPress={goToAdaptive}>
           <Text style={styles.buttonText}>{t.home.adaptiveTitle}</Text>
@@ -86,7 +68,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    gap: 30,
+    gap: 40,
   },
   title: {
     fontSize: 32,
@@ -102,26 +84,6 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     paddingHorizontal: 20,
   },
-  modeExplanation: {
-    backgroundColor: '#1A1A1A',
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 30,
-    width: '90%',
-    alignItems: 'center',
-  },
-  explanationTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginBottom: 10,
-  },
-  explanationText: {
-    fontSize: 14,
-    color: '#CCCCCC',
-    textAlign: 'center',
-    lineHeight: 20,
-  },
   adaptiveButton: {
     backgroundColor: '#007AFF',
     paddingHorizontal: 25,
@@ -134,7 +96,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
-    marginBottom: 5,
+    marginBottom: 20,
   },
   fixedButton: {
     backgroundColor: '#34C759',

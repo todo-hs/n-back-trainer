@@ -260,17 +260,13 @@ export default function FixedTrainingScreen() {
     newVisualHits[currentTrial] = true;
     setVisualHits(newVisualHits);
     
-    // Enhanced feedback
+    // Enhanced feedback (no score tracking here anymore)
     if (isCorrect) {
-      setScore(prev => ({ correct: prev.correct + 1, total: prev.total + 1 }));
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       animateResponse(true);
-      
     } else {
-      setScore(prev => ({ ...prev, total: prev.total + 1 }));
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       animateResponse(false);
-      
       // Vibration pattern for error
       Vibration.vibrate([100, 50, 100]);
     }
@@ -290,17 +286,13 @@ export default function FixedTrainingScreen() {
     newAudioHits[currentTrial] = true;
     setAudioHits(newAudioHits);
     
-    // Enhanced feedback
+    // Enhanced feedback (no score tracking here anymore)
     if (isCorrect) {
-      setScore(prev => ({ correct: prev.correct + 1, total: prev.total + 1 }));
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       animateResponse(true);
-      
     } else {
-      setScore(prev => ({ ...prev, total: prev.total + 1 }));
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       animateResponse(false);
-      
       // Vibration pattern for error
       Vibration.vibrate([100, 50, 100]);
     }
@@ -331,23 +323,31 @@ export default function FixedTrainingScreen() {
       addSession({
         nLevel: N_LEVEL,
         mode: 'fixed',
-        visualHits: visualCorrect,
-        visualMisses: 0, // Could be calculated based on actual matches
-        visualFalseAlarms: visualHits.length - visualCorrect,
-        audioHits: audioCorrect,
-        audioMisses: 0, // Could be calculated based on actual matches
-        audioFalseAlarms: audioHits.length - audioCorrect,
+        visualHits: visualHitsCount,
+        visualMisses: visualMissesCount,
+        visualFalseAlarms: visualFalseAlarmsCount,
+        audioHits: audioHitsCount,
+        audioMisses: audioMissesCount,
+        audioFalseAlarms: audioFalseAlarmsCount,
         averageReactionTime: 0, // Could be implemented with reaction time tracking
-        accuracy: Math.round(accuracy),
+        accuracy: Math.round(overallAccuracy),
         duration,
         startedAt: sessionStartTime,
         finishedAt: endTime,
       });
     }
     
+    // Create detailed result message
+    const resultMessage = 
+      `${t.training.accuracy}: ${overallAccuracy.toFixed(1)}%\n\n` +
+      `Visual: ${visualAccuracy.toFixed(1)}%\n` +
+      `${t.training.correct}: ${visualCorrectTotal}/${validTrials}\n\n` +
+      `Audio: ${audioAccuracy.toFixed(1)}%\n` +
+      `${t.training.correct}: ${audioCorrectTotal}/${validTrials}`;
+    
     Alert.alert(
       t.training.sessionComplete,
-      `${t.training.accuracy}: ${accuracy.toFixed(1)}%\n${t.training.correct}: ${score.correct}/${score.total}\n${t.training.level}: ${N_LEVEL} (${settings.language === 'ja' ? '固定' : 'Fixed'})`,
+      resultMessage,
       [
         { text: t.training.continue, onPress: () => {
           // Restart game
@@ -455,6 +455,7 @@ export default function FixedTrainingScreen() {
           ]} 
           onPress={handleVisualResponse}
           disabled={!canRespond || !isRunning}
+          activeOpacity={1}
         >
           <Text style={styles.buttonText}>
             <Text style={styles.buttonIcon}>👁️</Text>
@@ -469,6 +470,7 @@ export default function FixedTrainingScreen() {
           ]} 
           onPress={handleAudioResponse}
           disabled={!canRespond || !isRunning}
+          activeOpacity={1}
         >
           <Text style={styles.buttonText}>
             <Text style={styles.buttonIcon}>👂</Text>
@@ -588,14 +590,14 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   visualButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 30,
     paddingVertical: 20,
     borderRadius: 12,
     flex: 1,
   },
   audioButton: {
-    backgroundColor: '#4ECDC4',
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 30,
     paddingVertical: 20,
     borderRadius: 12,
@@ -605,7 +607,7 @@ const styles = StyleSheet.create({
     opacity: 0.3,
   },
   pressedButton: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#CCCCCC',
   },
   controlContainer: {
     alignItems: 'center',

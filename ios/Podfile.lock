@@ -6,7 +6,7 @@ PODS:
     - ReactCommon/turbomodule/core
   - EXConstants (17.1.6):
     - ExpoModulesCore
-  - Expo (53.0.12):
+  - Expo (53.0.13):
     - DoubleConversion
     - ExpoModulesCore
     - glog
@@ -41,7 +41,7 @@ PODS:
     - ExpoModulesCore
   - ExpoHaptics (14.1.4):
     - ExpoModulesCore
-  - ExpoHead (5.1.0):
+  - ExpoHead (5.1.1):
     - ExpoModulesCore
   - ExpoKeepAwake (14.1.4):
     - ExpoModulesCore
@@ -2293,12 +2293,12 @@ SPEC CHECKSUMS:
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   EXAV: 3fff236999a5a5c0f9b251d1a902908e4c844199
   EXConstants: 9f310f44bfedba09087042756802040e464323c0
-  Expo: 96f7935e5af791080d758fbfda1f7c10e827e588
+  Expo: d8192e2b8d8df04a44affce7e908137a892933d1
   ExpoAsset: 3bc9adb7dbbf27ae82c18ca97eb988a3ae7e73b1
   ExpoFileSystem: c36eb8155eb2381c83dda7dc210e3eec332368b6
   ExpoFont: abbb91a911eb961652c2b0a22eef801860425ed6
   ExpoHaptics: 0ff6e0d83cd891178a306e548da1450249d54500
-  ExpoHead: 1e65b47330de2164c628da2bddf73d57cac123bf
+  ExpoHead: 5fa9071821209796843730542d666f625fa36f87
   ExpoKeepAwake: bf0811570c8da182bfb879169437d4de298376e7
   ExpoLinking: b85ff4eafeae6fc638c6cace60007ae521af0ef4
   ExpoModulesCore: d431ffe83c8673d02cb38425594a5f5480fd3061

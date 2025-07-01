@@ -1,140 +1,18 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, Switch, TouchableOpacity, Alert, Modal, FlatList } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, Switch, TouchableOpacity, Alert, Modal, FlatList, View as RNView } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useTranslations } from '@/utils/i18n';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function SettingsScreen() {
   const { settings, updateSettings } = useSettingsStore();
   const [showNLevelModal, setShowNLevelModal] = useState(false);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [showHowToPlayModal, setShowHowToPlayModal] = useState(false);
   const t = useTranslations(settings.language);
   
   const isDark = settings.theme === 'dark';
-  
-  // ダークモードでも背景のみ黒、他はライトモード仕様
-  const dynamicStyles = {
-    container: {
-      ...styles.container,
-      backgroundColor: isDark ? '#000000' : '#F5F5F7',
-    },
-    header: {
-      ...styles.header,
-      backgroundColor: '#007AFF',
-      borderBottomWidth: 0,
-      borderBottomColor: 'transparent',
-    },
-    title: {
-      ...styles.title,
-      color: '#FFFFFF',
-    },
-    subtitle: {
-      ...styles.subtitle,
-      color: 'rgba(255, 255, 255, 0.9)',
-    },
-    section: {
-      ...styles.section,
-    },
-    sectionTitle: {
-      ...styles.sectionTitle,
-      color: '#1D4ED8',
-    },
-    settingRow: {
-      ...styles.settingRow,
-      backgroundColor: '#FFFFFF',
-      borderColor: 'transparent',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 3,
-    },
-    settingLabel: {
-      ...styles.settingLabel,
-      color: '#1C1C1E',
-    },
-    settingDescription: {
-      ...styles.settingDescription,
-      color: '#6B7280',
-    },
-    settingValue: {
-      ...styles.settingValue,
-      color: '#007AFF',
-    },
-    settingValueContainer: {
-      ...styles.settingValueContainer,
-      backgroundColor: 'rgba(0, 122, 255, 0.12)',
-      borderColor: 'rgba(0, 122, 255, 0.2)',
-    },
-    settingValueDisplay: {
-      ...styles.settingValueDisplay,
-      backgroundColor: 'rgba(0, 122, 255, 0.12)',
-      borderColor: 'rgba(0, 122, 255, 0.2)',
-    },
-    iconContainer: {
-      ...styles.iconContainer,
-      backgroundColor: 'rgba(0, 122, 255, 0.15)',
-    },
-    switchContainer: {
-      ...styles.switchContainer,
-      backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    },
-    modalOverlay: {
-      ...styles.modalOverlay,
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    },
-    modalContent: {
-      ...styles.modalContent,
-      backgroundColor: '#FFFFFF',
-      borderColor: 'transparent',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 20 },
-      shadowOpacity: 0.25,
-      shadowRadius: 25,
-      elevation: 20,
-    },
-    modalHeader: {
-      ...styles.modalHeader,
-      backgroundColor: '#F8F9FA',
-      borderBottomColor: '#E9ECEF',
-    },
-    modalTitle: {
-      ...styles.modalTitle,
-      color: '#1C1C1E',
-    },
-    modalCloseButton: {
-      ...styles.modalCloseButton,
-      backgroundColor: 'rgba(0, 0, 0, 0.08)',
-    },
-    modalCloseText: {
-      ...styles.modalCloseText,
-      color: '#000000',
-    },
-    nLevelOption: {
-      ...styles.nLevelOption,
-      backgroundColor: '#F8F9FA',
-      borderWidth: 1,
-      borderColor: '#E9ECEF',
-    },
-    nLevelOptionText: {
-      ...styles.nLevelOptionText,
-      color: '#1C1C1E',
-    },
-    nLevelOptionTextLocked: {
-      ...styles.nLevelOptionTextLocked,
-      color: '#999',
-    },
-    premiumBadge: {
-      ...styles.premiumBadge,
-      backgroundColor: 'rgba(255, 215, 0, 0.2)',
-      borderColor: 'rgba(255, 215, 0, 0.4)',
-    },
-    premiumButton: {
-      ...styles.premiumButton,
-      backgroundColor: '#FFD700',
-      borderColor: '#FFA500',
-    },
-  };
   
   const nLevelOptions = [
     { value: 1, label: t.nLevels.n1, premium: false },
@@ -189,112 +67,309 @@ export default function SettingsScreen() {
   };
 
   return (
-    <SafeAreaView style={dynamicStyles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={dynamicStyles.header}>
-          <Text style={dynamicStyles.title}>{t.settings.title}</Text>
-          <Text style={dynamicStyles.subtitle}>{t.settings.subtitle}</Text>
+    <SafeAreaView style={[styles.container, { backgroundColor: isDark ? '#0A0A0B' : '#FFFFFF' }]}>
+      <ScrollView 
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Header with gradient effect */}
+        <View style={styles.headerContainer}>
+          <LinearGradient
+            colors={isDark ? ['#0A0A0B', '#0A0A0B'] : ['#FFFFFF', '#FFFFFF']}
+            style={styles.headerGradient}
+          >
+            <Text style={[styles.title, { color: isDark ? '#FFFFFF' : '#000000' }]}>
+              {t.settings.title}
+            </Text>
+            <Text style={[styles.subtitle, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
+              Customize your training experience
+            </Text>
+          </LinearGradient>
         </View>
         
+        {/* How to Play Section - First Priority */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t.settings.trainingSettings}</Text>
+          <Text style={[styles.sectionTitle, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+            {settings.language === 'ja' ? 'ヘルプ・情報' : 'Help & Info'}
+          </Text>
           
           <TouchableOpacity 
-            style={[styles.settingRow, dynamicStyles.settingRow]}
+            style={[
+              styles.settingCard,
+              { 
+                backgroundColor: isDark ? '#111113' : '#F9FAFB',
+                borderColor: isDark ? '#1F2937' : '#E5E7EB',
+              }
+            ]}
+            onPress={() => setShowHowToPlayModal(true)}
+            activeOpacity={0.7}
+          >
+            <LinearGradient
+              colors={['#6366F1', '#8B5CF6']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.iconGradient}
+            >
+              <Text style={styles.iconEmoji}>📚</Text>
+            </LinearGradient>
+            
+            <View style={styles.settingContent}>
+              <Text style={[styles.settingLabel, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                {settings.language === 'ja' ? 'N-Backの遊び方' : 'How to Play N-Back'}
+              </Text>
+              <Text style={[styles.settingDescription, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
+                {settings.language === 'ja' ? 'ルール、スコア、効果について学ぶ' : 'Learn the rules, scoring, and benefits'}
+              </Text>
+            </View>
+            
+            <View style={[
+              styles.valueChip,
+              { 
+                backgroundColor: isDark ? '#1F2937' : '#EEF2FF',
+                borderWidth: 2,
+                borderColor: '#6366F1',
+                shadowColor: '#6366F1',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 4,
+                elevation: 2,
+              }
+            ]}>
+              <Text style={[styles.valueText, { color: '#6366F1' }]}>
+                {settings.language === 'ja' ? 'ガイド' : 'Guide'}
+              </Text>
+              <Text style={[styles.chevron, { color: '#6366F1' }]}>›</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        
+        {/* Training Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+            {t.settings.trainingSettings}
+          </Text>
+          
+          <TouchableOpacity 
+            style={[
+              styles.settingCard,
+              { 
+                backgroundColor: isDark ? '#111113' : '#F9FAFB',
+                borderColor: isDark ? '#1F2937' : '#E5E7EB',
+              }
+            ]}
             onPress={() => setShowNLevelModal(true)}
             activeOpacity={0.7}
           >
-            <View style={styles.settingRowContent}>
-              <View style={dynamicStyles.iconContainer}>
-                <Text style={styles.settingIcon}>⚙️</Text>
-              </View>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.fixedNLevel}</Text>
-                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.fixedNDescription}</Text>
-                {!settings.isPremium && settings.fixedN > 3 && (
-                  <View style={styles.premiumBadgeContainer}>
-                    <Text style={dynamicStyles.premiumBadge}>{t.settings.premiumTrial}</Text>
-                  </View>
-                )}
-              </View>
+            <LinearGradient
+              colors={['#3B82F6', '#8B5CF6']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.iconGradient}
+            >
+              <Text style={styles.iconEmoji}>🎯</Text>
+            </LinearGradient>
+            
+            <View style={styles.settingContent}>
+              <Text style={[styles.settingLabel, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                {t.settings.fixedNLevel}
+              </Text>
+              <Text style={[styles.settingDescription, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
+                {t.settings.fixedNDescription}
+              </Text>
             </View>
-            <View style={dynamicStyles.settingValueContainer}>
-              <Text style={dynamicStyles.settingValue}>N={settings.fixedN}</Text>
-              <Text style={[styles.settingArrow, dynamicStyles.settingValue]}>›</Text>
+            
+            <View style={[
+              styles.valueChip,
+              { 
+                backgroundColor: isDark ? '#1F2937' : '#EEF2FF',
+                borderWidth: 2,
+                borderColor: '#3B82F6',
+                shadowColor: '#3B82F6',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 4,
+                elevation: 2,
+              }
+            ]}>
+              <Text style={[styles.valueText, { color: '#3B82F6' }]}>
+                N={settings.fixedN}
+              </Text>
+              <Text style={[styles.chevron, { color: '#3B82F6' }]}>›</Text>
             </View>
           </TouchableOpacity>
-          
         </View>
         
+        {/* Feedback Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t.settings.audioFeedback}</Text>
+          <Text style={[styles.sectionTitle, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+            {t.settings.audioFeedback}
+          </Text>
           
-          <View style={[styles.settingRow, dynamicStyles.settingRow]}>
-            <View style={styles.settingRowContent}>
-              <View style={dynamicStyles.iconContainer}>
-                <Text style={styles.settingIcon}>📳</Text>
-              </View>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.vibration}</Text>
-                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.vibrationDescription}</Text>
-              </View>
+          <View style={[
+            styles.settingCard,
+            { 
+              backgroundColor: isDark ? '#111113' : '#F9FAFB',
+              borderColor: isDark ? '#1F2937' : '#E5E7EB',
+            }
+          ]}>
+            <LinearGradient
+              colors={['#8B5CF6', '#EC4899']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.iconGradient}
+            >
+              <Text style={styles.iconEmoji}>📳</Text>
+            </LinearGradient>
+            
+            <View style={styles.settingContent}>
+              <Text style={[styles.settingLabel, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                {t.settings.vibration}
+              </Text>
+              <Text style={[styles.settingDescription, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
+                {t.settings.vibrationDescription}
+              </Text>
             </View>
-            <View style={dynamicStyles.switchContainer}>
-              <Switch
-                value={settings.vibrationEnabled}
-                onValueChange={(value) => updateSettings({ vibrationEnabled: value })}
-                trackColor={{ false: '#E9E9EA', true: '#007AFF' }}
-                thumbColor={settings.vibrationEnabled ? '#FFF' : '#F2F2F2'}
-                ios_backgroundColor="#E9E9EA"
-              />
-            </View>
+            
+            <Switch
+              value={settings.vibrationEnabled}
+              onValueChange={(value) => updateSettings({ vibrationEnabled: value })}
+              trackColor={{ false: isDark ? '#374151' : '#E5E7EB', true: '#8B5CF6' }}
+              thumbColor="#FFFFFF"
+              ios_backgroundColor={isDark ? '#374151' : '#E5E7EB'}
+            />
           </View>
-          
         </View>
         
+        {/* Appearance Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t.settings.appearance}</Text>
+          <Text style={[styles.sectionTitle, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+            {t.settings.appearance}
+          </Text>
           
           <TouchableOpacity 
-            style={[styles.settingRow, dynamicStyles.settingRow]}
+            style={[
+              styles.settingCard,
+              { 
+                backgroundColor: isDark ? '#111113' : '#F9FAFB',
+                borderColor: isDark ? '#1F2937' : '#E5E7EB',
+              }
+            ]}
             onPress={() => updateSettings({ theme: settings.theme === 'dark' ? 'light' : 'dark' })}
             activeOpacity={0.7}
           >
-            <View style={styles.settingRowContent}>
-              <View style={dynamicStyles.iconContainer}>
-                <Text style={styles.settingIcon}>{settings.theme === 'dark' ? '🌙' : '☀️'}</Text>
-              </View>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.theme}</Text>
-                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.themeDescription}</Text>
-              </View>
+            <LinearGradient
+              colors={isDark ? ['#F59E0B', '#EF4444'] : ['#FCD34D', '#F59E0B']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.iconGradient}
+            >
+              <Text style={styles.iconEmoji}>{settings.theme === 'dark' ? '🌙' : '☀️'}</Text>
+            </LinearGradient>
+            
+            <View style={styles.settingContent}>
+              <Text style={[styles.settingLabel, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                {t.settings.theme}
+              </Text>
+              <Text style={[styles.settingDescription, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
+                {t.settings.themeDescription}
+              </Text>
             </View>
-            <View style={dynamicStyles.settingValueContainer}>
-              <Text style={dynamicStyles.settingValue}>{settings.theme === 'dark' ? t.general.dark : t.general.light}</Text>
-              <Text style={[styles.settingArrow, dynamicStyles.settingValue]}>›</Text>
+            
+            <View style={[
+              styles.valueChip,
+              { 
+                backgroundColor: isDark ? '#1F2937' : '#FEF3C7',
+                borderWidth: 2,
+                borderColor: '#F59E0B',
+                shadowColor: '#F59E0B',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 4,
+                elevation: 2,
+              }
+            ]}>
+              <Text style={[styles.valueText, { color: '#F59E0B' }]}>
+                {settings.theme === 'dark' ? t.general.dark : t.general.light}
+              </Text>
+              <Text style={[styles.chevron, { color: '#F59E0B' }]}>›</Text>
             </View>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={[styles.settingRow, dynamicStyles.settingRow]}
+            style={[
+              styles.settingCard,
+              { 
+                backgroundColor: isDark ? '#111113' : '#F9FAFB',
+                borderColor: isDark ? '#1F2937' : '#E5E7EB',
+              }
+            ]}
             onPress={() => setShowLanguageModal(true)}
             activeOpacity={0.7}
           >
-            <View style={styles.settingRowContent}>
-              <View style={dynamicStyles.iconContainer}>
-                <Text style={styles.settingIcon}>🌍</Text>
-              </View>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabel, dynamicStyles.settingLabel]}>{t.settings.language}</Text>
-                <Text style={[styles.settingDescription, dynamicStyles.settingDescription]}>{t.settings.languageDescription}</Text>
-              </View>
+            <LinearGradient
+              colors={['#10B981', '#3B82F6']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.iconGradient}
+            >
+              <Text style={styles.iconEmoji}>🌍</Text>
+            </LinearGradient>
+            
+            <View style={styles.settingContent}>
+              <Text style={[styles.settingLabel, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                {t.settings.language}
+              </Text>
+              <Text style={[styles.settingDescription, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
+                {t.settings.languageDescription}
+              </Text>
             </View>
-            <View style={dynamicStyles.settingValueContainer}>
-              <Text style={dynamicStyles.settingValue}>{settings.language === 'ja' ? t.general.japanese : t.general.english}</Text>
-              <Text style={[styles.settingArrow, dynamicStyles.settingValue]}>›</Text>
+            
+            <View style={[
+              styles.valueChip,
+              { 
+                backgroundColor: isDark ? '#1F2937' : '#D1FAE5',
+                borderWidth: 2,
+                borderColor: '#10B981',
+                shadowColor: '#10B981',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 4,
+                elevation: 2,
+              }
+            ]}>
+              <Text style={[styles.valueText, { color: '#10B981' }]}>
+                {settings.language === 'ja' ? t.general.japanese : t.general.english}
+              </Text>
+              <Text style={[styles.chevron, { color: '#10B981' }]}>›</Text>
             </View>
           </TouchableOpacity>
         </View>
+        
+        
+        {/* Premium Upsell Card */}
+        {!settings.isPremium && (
+          <TouchableOpacity 
+            style={styles.premiumCard}
+            onPress={handlePremiumUpgrade}
+            activeOpacity={0.8}
+          >
+            <LinearGradient
+              colors={['#F59E0B', '#EF4444', '#8B5CF6']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.premiumGradient}
+            >
+              <Text style={styles.premiumIcon}>⚡</Text>
+              <Text style={styles.premiumTitle}>Unlock Premium</Text>
+              <Text style={styles.premiumSubtitle}>
+                Access all N-levels and advanced features
+              </Text>
+              <View style={styles.premiumPriceContainer}>
+                <Text style={styles.premiumPrice}>$3/month</Text>
+              </View>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
       </ScrollView>
       
       {/* N-Level Selection Modal */}
@@ -304,62 +379,73 @@ export default function SettingsScreen() {
         animationType="slide"
         onRequestClose={() => setShowNLevelModal(false)}
       >
-        <View style={dynamicStyles.modalOverlay}>
-          <View style={dynamicStyles.modalContent}>
-            <View style={dynamicStyles.modalHeader}>
-              <Text style={dynamicStyles.modalTitle}>{t.settings.selectNLevel}</Text>
+        <View style={styles.modalOverlay}>
+          <View style={[
+            styles.modalContent,
+            { 
+              backgroundColor: isDark ? '#111113' : '#FFFFFF',
+              borderColor: isDark ? '#1F2937' : '#E5E7EB',
+            }
+          ]}>
+            <View style={[
+              styles.modalHeader,
+              { 
+                backgroundColor: isDark ? '#0A0A0B' : '#F9FAFB',
+                borderBottomColor: isDark ? '#1F2937' : '#E5E7EB',
+              }
+            ]}>
+              <Text style={[styles.modalTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                {t.settings.selectNLevel}
+              </Text>
               <TouchableOpacity 
-                style={dynamicStyles.modalCloseButton}
+                style={[
+                  styles.modalCloseButton,
+                  { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }
+                ]}
                 onPress={() => setShowNLevelModal(false)}
               >
-                <Text style={dynamicStyles.modalCloseText}>✕</Text>
+                <Text style={[styles.modalCloseText, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+                  ✕
+                </Text>
               </TouchableOpacity>
             </View>
             
             <FlatList
               data={nLevelOptions}
               keyExtractor={(item) => item.value.toString()}
+              contentContainerStyle={styles.modalList}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[
-                    dynamicStyles.nLevelOption,
-                    settings.fixedN === item.value && styles.nLevelOptionSelected,
-                    item.premium && !settings.isPremium && styles.nLevelOptionLocked
+                    styles.modalOption,
+                    { 
+                      backgroundColor: isDark ? '#0A0A0B' : '#F9FAFB',
+                      borderColor: isDark ? '#1F2937' : '#E5E7EB',
+                    },
+                    settings.fixedN === item.value && styles.modalOptionSelected,
+                    item.premium && !settings.isPremium && styles.modalOptionLocked
                   ]}
                   onPress={() => handleNLevelSelect(item.value, item.premium)}
                 >
-                  <View style={styles.nLevelOptionContent}>
+                  <View style={styles.modalOptionContent}>
                     <Text style={[
-                      dynamicStyles.nLevelOptionText,
-                      settings.fixedN === item.value && styles.nLevelOptionTextSelected,
-                      item.premium && !settings.isPremium && dynamicStyles.nLevelOptionTextLocked
+                      styles.modalOptionText,
+                      { color: isDark ? '#FFFFFF' : '#111827' },
+                      settings.fixedN === item.value && styles.modalOptionTextSelected,
+                      item.premium && !settings.isPremium && styles.modalOptionTextLocked
                     ]}>
                       {item.label}
                     </Text>
                     {item.premium && !settings.isPremium && (
-                      <Text style={styles.premiumIcon}>🔒</Text>
+                      <Text style={styles.lockIcon}>🔒</Text>
                     )}
                     {settings.fixedN === item.value && (
-                      <Text style={styles.selectedIcon}>✓</Text>
+                      <Text style={styles.checkIcon}>✓</Text>
                     )}
                   </View>
                 </TouchableOpacity>
               )}
             />
-            
-            {!settings.isPremium && (
-              <TouchableOpacity 
-                style={dynamicStyles.premiumButton}
-                onPress={handlePremiumUpgrade}
-              >
-                <Text style={styles.premiumButtonText}>
-                  {t.settings.premiumUpgrade}
-                </Text>
-                <Text style={styles.premiumButtonSubtext}>
-                  {t.settings.premiumPrice}
-                </Text>
-              </TouchableOpacity>
-            )}
           </View>
         </View>
       </Modal>
@@ -371,43 +457,215 @@ export default function SettingsScreen() {
         animationType="slide"
         onRequestClose={() => setShowLanguageModal(false)}
       >
-        <View style={dynamicStyles.modalOverlay}>
-          <View style={dynamicStyles.modalContent}>
-            <View style={dynamicStyles.modalHeader}>
-              <Text style={dynamicStyles.modalTitle}>{t.settings.language}</Text>
+        <View style={styles.modalOverlay}>
+          <View style={[
+            styles.modalContent,
+            { 
+              backgroundColor: isDark ? '#111113' : '#FFFFFF',
+              borderColor: isDark ? '#1F2937' : '#E5E7EB',
+            }
+          ]}>
+            <View style={[
+              styles.modalHeader,
+              { 
+                backgroundColor: isDark ? '#0A0A0B' : '#F9FAFB',
+                borderBottomColor: isDark ? '#1F2937' : '#E5E7EB',
+              }
+            ]}>
+              <Text style={[styles.modalTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                {t.settings.language}
+              </Text>
               <TouchableOpacity 
-                style={dynamicStyles.modalCloseButton}
+                style={[
+                  styles.modalCloseButton,
+                  { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }
+                ]}
                 onPress={() => setShowLanguageModal(false)}
               >
-                <Text style={dynamicStyles.modalCloseText}>✕</Text>
+                <Text style={[styles.modalCloseText, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+                  ✕
+                </Text>
               </TouchableOpacity>
             </View>
             
             <FlatList
               data={languageOptions}
               keyExtractor={(item) => item.value}
+              contentContainerStyle={styles.modalList}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[
-                    dynamicStyles.nLevelOption,
-                    settings.language === item.value && styles.nLevelOptionSelected,
+                    styles.modalOption,
+                    { 
+                      backgroundColor: isDark ? '#0A0A0B' : '#F9FAFB',
+                      borderColor: isDark ? '#1F2937' : '#E5E7EB',
+                    },
+                    settings.language === item.value && styles.modalOptionSelected
                   ]}
                   onPress={() => handleLanguageSelect(item.value as 'ja' | 'en')}
                 >
-                  <View style={styles.nLevelOptionContent}>
+                  <View style={styles.modalOptionContent}>
                     <Text style={[
-                      dynamicStyles.nLevelOptionText,
-                      settings.language === item.value && styles.nLevelOptionTextSelected,
+                      styles.modalOptionText,
+                      { color: isDark ? '#FFFFFF' : '#111827' },
+                      settings.language === item.value && styles.modalOptionTextSelected
                     ]}>
                       {item.label}
                     </Text>
                     {settings.language === item.value && (
-                      <Text style={styles.selectedIcon}>✓</Text>
+                      <Text style={styles.checkIcon}>✓</Text>
                     )}
                   </View>
                 </TouchableOpacity>
               )}
             />
+          </View>
+        </View>
+      </Modal>
+      
+      {/* How to Play Modal */}
+      <Modal
+        visible={showHowToPlayModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowHowToPlayModal(false)}
+      >
+        <View style={[styles.modalOverlay, { backgroundColor: 'rgba(0, 0, 0, 0.8)' }]}>
+          <View style={[
+            styles.tutorialModalContent,
+            { 
+              backgroundColor: isDark ? '#111113' : '#FFFFFF',
+              borderColor: isDark ? '#1F2937' : '#E5E7EB',
+            }
+          ]}>
+            <View style={[
+              styles.modalHeader,
+              { 
+                backgroundColor: isDark ? '#0A0A0B' : '#F9FAFB',
+                borderBottomColor: isDark ? '#1F2937' : '#E5E7EB',
+              }
+            ]}>
+              <Text style={[styles.modalTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                {settings.language === 'ja' ? 'N-Backの遊び方' : 'How to Play N-Back'}
+              </Text>
+              <TouchableOpacity 
+                style={[
+                  styles.modalCloseButton,
+                  { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }
+                ]}
+                onPress={() => setShowHowToPlayModal(false)}
+              >
+                <Text style={[styles.modalCloseText, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+                  ✕
+                </Text>
+              </TouchableOpacity>
+            </View>
+            
+            <ScrollView 
+              style={styles.tutorialContent}
+              showsVerticalScrollIndicator={false}
+            >
+              {/* What is N-Back */}
+              <View style={styles.tutorialSection}>
+                <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                  {settings.language === 'ja' ? '🧠 N-Backとは？' : '🧠 What is N-Back?'}
+                </Text>
+                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                  {settings.language === 'ja' 
+                    ? 'N-Backは作業記憶（ワーキングメモリー）を鍛える科学的に証明されたトレーニングです。視覚と聴覚の刺激を記憶し、N個前の刺激と一致するかを判断します。'
+                    : 'N-Back is a scientifically proven training method for working memory. You need to remember visual and auditory stimuli and determine if they match stimuli from N steps back.'}
+                </Text>
+              </View>
+              
+              {/* How to Play */}
+              <View style={styles.tutorialSection}>
+                <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                  {settings.language === 'ja' ? '🎮 遊び方' : '🎮 How to Play'}
+                </Text>
+                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                  {settings.language === 'ja'
+                    ? '1. グリッド上の光る位置（視覚）と読み上げられる文字（聴覚）を記憶\n\n2. 現在の刺激がN個前の刺激と一致する場合、対応するボタンを押す\n\n3. 一致しない場合は何も押さない'
+                    : '1. Remember the glowing position (visual) and spoken letter (audio)\n\n2. Press the corresponding button if current stimulus matches the one from N steps back\n\n3. Do nothing if they don\'t match'}
+                </Text>
+              </View>
+              
+              {/* Scoring System */}
+              <View style={styles.tutorialSection}>
+                <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                  {settings.language === 'ja' ? '📊 スコアシステム' : '📊 Scoring System'}
+                </Text>
+                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                  {settings.language === 'ja'
+                    ? '✅ ヒット: 一致時に正しく押した\n❌ ミス: 一致時に押さなかった\n✅ 正しい拒否: 非一致時に正しく押さなかった\n❌ 誤報: 非一致時に間違って押した\n\n正答率 = (ヒット + 正しい拒否) ÷ 全試行数 × 100%'
+                    : '✅ Hit: Correctly pressed when matching\n❌ Miss: Didn\'t press when matching\n✅ Correct Rejection: Correctly didn\'t press when not matching\n❌ False Alarm: Incorrectly pressed when not matching\n\nAccuracy = (Hits + Correct Rejections) ÷ Total Trials × 100%'}
+                </Text>
+              </View>
+              
+              {/* Training Modes */}
+              <View style={styles.tutorialSection}>
+                <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                  {settings.language === 'ja' ? '🎯 トレーニングモード' : '🎯 Training Modes'}
+                </Text>
+                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                  {settings.language === 'ja'
+                    ? '🔵 適応型トレーニング\nパフォーマンスに基づいて自動的にレベルが調整されます。常に最適な難易度でトレーニングできます。\n\n🟢 固定型トレーニング\n設定したNレベルで一定の難易度を維持します。特定のレベルを集中的に練習したい場合に最適です。'
+                    : '🔵 Adaptive Training\nAutomatically adjusts level based on your performance. Always trains at your optimal difficulty level.\n\n🟢 Fixed Training\nMaintains consistent difficulty at your selected N-level. Perfect for focused practice at a specific level.'}
+                </Text>
+              </View>
+              
+              {/* Level Rules */}
+              <View style={styles.tutorialSection}>
+                <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                  {settings.language === 'ja' ? '📈 レベル調整ルール' : '📈 Level Adjustment Rules'}
+                </Text>
+                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                  {settings.language === 'ja'
+                    ? '🔥 レベルアップ: 正答率80%以上でN+1\n❄️ レベルダウン: 正答率50%未満でN-1\n\n適応モードでは自動調整されます。'
+                    : '🔥 Level Up: 80%+ accuracy → N+1\n❄️ Level Down: <50% accuracy → N-1\n\nAdaptive mode adjusts automatically.'}
+                </Text>
+              </View>
+              
+              {/* Benefits */}
+              <View style={styles.tutorialSection}>
+                <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                  {settings.language === 'ja' ? '🌟 トレーニング効果' : '🌟 Training Benefits'}
+                </Text>
+                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                  {settings.language === 'ja'
+                    ? '• 作業記憶の向上\n• 集中力と注意力の強化\n• 情報処理速度の向上\n• 認知的柔軟性の向上\n• 学習能力の向上\n\n継続的な練習で効果を実感できます！'
+                    : '• Improved working memory\n• Enhanced focus and attention\n• Faster information processing\n• Better cognitive flexibility\n• Enhanced learning ability\n\nConsistent practice yields real results!'}
+                </Text>
+              </View>
+              
+              {/* Tips */}
+              <View style={styles.tutorialSection}>
+                <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                  {settings.language === 'ja' ? '💡 コツ' : '💡 Tips'}
+                </Text>
+                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                  {settings.language === 'ja'
+                    ? '• 確信がある時だけボタンを押す\n• 迷った時は押さない方が安全\n• 集中力を維持する\n• 毎日短時間でも継続する'
+                    : '• Only press when you\'re confident\n• When in doubt, don\'t press\n• Maintain focus throughout\n• Practice daily, even if briefly'}
+                </Text>
+              </View>
+            </ScrollView>
+            
+            <View style={[
+              styles.tutorialFooter,
+              { backgroundColor: isDark ? '#0A0A0B' : '#F9FAFB' }
+            ]}>
+              <TouchableOpacity 
+                style={[
+                  styles.tutorialCloseButton,
+                  { backgroundColor: '#6366F1' }
+                ]}
+                onPress={() => setShowHowToPlayModal(false)}
+              >
+                <Text style={styles.tutorialCloseButtonText}>
+                  {settings.language === 'ja' ? '始めましょう！' : 'Let\'s Start!'}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -418,255 +676,267 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
   },
   content: {
-    padding: 0,
+    paddingBottom: 40,
   },
-  header: {
-    alignItems: 'center',
-    paddingVertical: 50,
-    paddingHorizontal: 20,
-    backgroundColor: '#007AFF',
+  headerContainer: {
+    paddingTop: 10,
+    paddingBottom: 30,
+  },
+  headerGradient: {
+    paddingHorizontal: 24,
+    paddingVertical: 20,
   },
   title: {
-    fontSize: 28,
+    fontSize: 34,
     fontWeight: '800',
-    color: '#FFF',
-    textAlign: 'center',
+    letterSpacing: -0.5,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
-    textAlign: 'center',
+    fontWeight: '500',
+    opacity: 0.8,
   },
   section: {
     marginBottom: 24,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#007AFF',
-    marginBottom: 20,
-    marginTop: 32,
-    marginLeft: 4,
+    fontSize: 12,
+    fontWeight: '700',
     textTransform: 'uppercase',
-    letterSpacing: 1.5,
+    letterSpacing: 1.2,
+    marginBottom: 16,
+    marginLeft: 4,
   },
-  settingRow: {
+  settingCard: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 24,
-    backgroundColor: '#1A1A1A',
-    borderRadius: 16,
+    padding: 20,
+    borderRadius: 20,
     marginBottom: 12,
-    minHeight: 72,
-    borderWidth: 0,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 3,
   },
-  settingRowContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  iconContainer: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(0, 122, 255, 0.15)',
+  iconGradient: {
+    width: 52,
+    height: 52,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
   },
-  settingIcon: {
-    fontSize: 22,
-    textAlign: 'center',
+  iconEmoji: {
+    fontSize: 24,
   },
-  settingInfo: {
+  settingContent: {
     flex: 1,
   },
   settingLabel: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
-    color: '#FFF',
     marginBottom: 4,
+    letterSpacing: -0.3,
   },
   settingDescription: {
     fontSize: 14,
-    color: '#888',
+    fontWeight: '500',
     lineHeight: 20,
   },
-  settingValue: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#007AFF',
-  },
-  settingValueContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    backgroundColor: 'rgba(0, 122, 255, 0.12)',
+  valueChip: {
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 12,
-    borderWidth: 2,
-    borderColor: 'rgba(0, 122, 255, 0.2)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
-  settingValueDisplay: {
-    backgroundColor: 'rgba(0, 122, 255, 0.12)',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: 'rgba(0, 122, 255, 0.2)',
+  valueText: {
+    fontSize: 15,
+    fontWeight: '700',
+    letterSpacing: -0.2,
   },
-  switchContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    padding: 4,
-    borderRadius: 20,
-  },
-  settingArrow: {
-    fontSize: 18,
-    color: '#007AFF',
+  chevron: {
+    fontSize: 20,
     fontWeight: '700',
   },
-  premiumBadgeContainer: {
-    marginTop: 8,
+  
+  // Premium Card
+  premiumCard: {
+    marginHorizontal: 20,
+    marginTop: 20,
+    borderRadius: 24,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 16,
+    elevation: 5,
   },
-  premiumBadge: {
-    fontSize: 12,
-    color: '#FFD700',
+  premiumGradient: {
+    padding: 28,
+    alignItems: 'center',
+  },
+  premiumIcon: {
+    fontSize: 48,
+    marginBottom: 16,
+  },
+  premiumTitle: {
+    fontSize: 24,
     fontWeight: '800',
-    backgroundColor: 'rgba(255, 215, 0, 0.2)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-    alignSelf: 'flex-start',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 215, 0, 0.4)',
+    color: '#FFFFFF',
+    marginBottom: 8,
+    letterSpacing: -0.5,
+  },
+  premiumSubtitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  premiumPriceContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 16,
+  },
+  premiumPrice: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#FFFFFF',
   },
   
   // Modal Styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: '#1A1A1A',
-    borderRadius: 24,
-    padding: 0,
-    width: '92%',
-    maxHeight: '85%',
-    borderWidth: 2,
-    borderColor: '#2A2A2A',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.5,
-    shadowRadius: 16,
-    elevation: 8,
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    maxHeight: '80%',
+    borderWidth: 1,
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#2A2A2A',
-    backgroundColor: '#2A2A2A',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
   },
   modalTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#FFF',
+    letterSpacing: -0.5,
   },
   modalCloseButton: {
     width: 36,
     height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 18,
   },
   modalCloseText: {
-    fontSize: 16,
-    color: '#FFF',
+    fontSize: 18,
     fontWeight: '600',
   },
-  nLevelOption: {
-    padding: 20,
-    marginHorizontal: 12,
-    marginVertical: 3,
-    borderRadius: 12,
-    backgroundColor: '#2A2A2A',
+  modalList: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
   },
-  nLevelOptionSelected: {
-    backgroundColor: '#007AFF',
-    shadowColor: '#007AFF',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+  modalOption: {
+    paddingVertical: 18,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+    marginBottom: 8,
+    borderWidth: 1,
   },
-  nLevelOptionLocked: {
+  modalOptionSelected: {
+    backgroundColor: '#3B82F6',
+    borderColor: '#3B82F6',
+  },
+  modalOptionLocked: {
     opacity: 0.5,
   },
-  nLevelOptionContent: {
+  modalOptionContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  nLevelOptionText: {
+  modalOptionText: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#FFF',
     flex: 1,
+    letterSpacing: -0.2,
   },
-  nLevelOptionTextSelected: {
-    color: '#FFF',
+  modalOptionTextSelected: {
+    color: '#FFFFFF',
+  },
+  modalOptionTextLocked: {
+    color: '#9CA3AF',
+  },
+  lockIcon: {
+    fontSize: 18,
+    marginRight: 8,
+  },
+  checkIcon: {
+    fontSize: 18,
+    color: '#FFFFFF',
     fontWeight: '700',
   },
-  nLevelOptionTextLocked: {
-    color: '#888',
+  
+  // Tutorial Modal Styles
+  tutorialModalContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    marginHorizontal: 20,
+    marginVertical: 40,
+    maxHeight: '90%',
+    borderWidth: 1,
+    overflow: 'hidden',
   },
-  premiumIcon: {
-    fontSize: 18,
-    marginRight: 12,
+  tutorialContent: {
+    paddingHorizontal: 24,
+    paddingVertical: 16,
   },
-  selectedIcon: {
+  tutorialSection: {
+    marginBottom: 24,
+  },
+  tutorialSectionTitle: {
     fontSize: 18,
-    color: '#FFF',
     fontWeight: '700',
+    marginBottom: 12,
+    letterSpacing: -0.3,
   },
-  premiumButton: {
-    backgroundColor: '#FFD700',
-    margin: 20,
+  tutorialText: {
+    fontSize: 15,
+    lineHeight: 24,
+    fontWeight: '500',
+  },
+  tutorialFooter: {
     padding: 20,
-    borderRadius: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+  },
+  tutorialCloseButton: {
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 12,
     alignItems: 'center',
-    shadowColor: '#FFD700',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
-    borderWidth: 2,
-    borderColor: '#FFA500',
   },
-  premiumButtonText: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#000',
-    marginBottom: 6,
-  },
-  premiumButtonSubtext: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
+  tutorialCloseButtonText: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
 });

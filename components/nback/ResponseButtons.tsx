@@ -17,7 +17,7 @@ export function ResponseButtons({ onVisualHit, onAudioHit, disabled = false }: R
         disabled={disabled}
         activeOpacity={0.8}
       >
-        <Eye size={32} color="#FFFFFF" />
+        <Eye size={32} color="#000000" />
         <Text style={styles.buttonText}>VISUAL</Text>
       </TouchableOpacity>
       
@@ -27,7 +27,7 @@ export function ResponseButtons({ onVisualHit, onAudioHit, disabled = false }: R
         disabled={disabled}
         activeOpacity={0.8}
       >
-        <Ear size={32} color="#FFFFFF" />
+        <Ear size={32} color="#000000" />
         <Text style={styles.buttonText}>AUDIO</Text>
       </TouchableOpacity>
     </View>
@@ -55,16 +55,16 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   visualButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: '#FFFFFF',
   },
   audioButton: {
-    backgroundColor: '#4ECDC4',
+    backgroundColor: '#FFFFFF',
   },
   disabled: {
     opacity: 0.5,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 14,
     fontWeight: '600',
     marginTop: 4,
