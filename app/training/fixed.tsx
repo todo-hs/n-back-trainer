@@ -37,12 +37,14 @@ export default function FixedTrainingScreen() {
   const cellScale = useRef(new Animated.Value(1)).current;
   const responseAnimation = useRef(new Animated.Value(0)).current;
   const progressAnimation = useRef(new Animated.Value(0)).current;
+  const highlightOpacity = useRef(new Animated.Value(0)).current;
   
   // Refs
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   
   // Constants
   const STIMULUS_DURATION = 800; // 800ms to show stimulus
+  const FADE_OUT_DURATION = 1000; // 1000ms fade out animation
   const INTER_STIMULUS_INTERVAL = 3000; // Total time per trial (3 seconds)
   const TOTAL_TRIALS = 20;
   // Optimal letter count based on N-level for effective training
@@ -146,6 +148,7 @@ export default function FixedTrainingScreen() {
       progressAnimation.setValue(0);
       responseAnimation.setValue(0);
       cellScale.setValue(1);
+      highlightOpacity.setValue(0);
 
       // Start a new game after delay
       const startDelay = setTimeout(() => {
@@ -203,8 +206,12 @@ export default function FixedTrainingScreen() {
     setCurrentLetter(trial.letter);
     setCanRespond(currentTrial >= N_LEVEL); // Can only respond after N trials
     
-    // Animate cell highlight
-    animateCell();
+    // Animate cell highlight with fade in
+    Animated.timing(highlightOpacity, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
     
     // Update progress animation
     const progress = (currentTrial + 1) / trials.length;
@@ -224,10 +231,16 @@ export default function FixedTrainingScreen() {
       rate: 0.6, // Slower speech rate for clarity
     });
     
-    // Hide stimulus after duration
-    const hideTimeout = setTimeout(() => {
-      setShowingStimulus(false);
-      setHighlightPosition(null);
+    // Start fade out after stimulus duration
+    const fadeOutTimeout = setTimeout(() => {
+      Animated.timing(highlightOpacity, {
+        toValue: 0,
+        duration: FADE_OUT_DURATION,
+        useNativeDriver: false,
+      }).start(() => {
+        setShowingStimulus(false);
+        setHighlightPosition(null);
+      });
     }, STIMULUS_DURATION);
     
     // Move to next trial
@@ -238,7 +251,7 @@ export default function FixedTrainingScreen() {
     }, INTER_STIMULUS_INTERVAL);
     
     return () => {
-      clearTimeout(hideTimeout);
+      clearTimeout(fadeOutTimeout);
       if (intervalRef.current) {
         clearTimeout(intervalRef.current);
       }
@@ -488,12 +501,21 @@ export default function FixedTrainingScreen() {
                 const cellIndex = rowIndex * 3 + colIndex;
                 const isCenter = cellIndex === 4;
                 return (
-                  <View
+                  <Animated.View
                     key={cellIndex}
                     style={[
                       styles.gridCell,
                       isCenter && styles.hiddenCell,
-                      highlightPosition === cellIndex && showingStimulus && styles.highlightedCell,
+                      highlightPosition === cellIndex && {
+                        backgroundColor: highlightOpacity.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: ['#333', '#00FF00'],
+                        }),
+                        shadowOpacity: highlightOpacity.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0, 0.8],
+                        }),
+                      },
                     ]}
                   />
                 );
@@ -667,7 +689,7 @@ const styles = StyleSheet.create({
     opacity: 0.3,
   },
   pressedButton: {
-    backgroundColor: '#CCCCCC',
+    backgroundColor: '#808080',
   },
   controlContainer: {
     alignItems: 'center',
