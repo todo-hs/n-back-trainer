@@ -154,6 +154,9 @@ export default function FixedTrainingScreen() {
       const startDelay = setTimeout(() => {
         console.log('Fixed mode: Starting new game...');
         
+        // Stop any ongoing speech first
+        Speech.stop();
+        
         // Generate new trials
         const newTrials = generateTrials(N_LEVEL, TOTAL_TRIALS);
         
@@ -169,6 +172,10 @@ export default function FixedTrainingScreen() {
         setShowingStimulus(false);
         setCanRespond(false);
         setButtonsPressed({visual: false, audio: false});
+        
+        // Reset highlight opacity before starting
+        highlightOpacity.setValue(0);
+        
         setIsRunning(true); // Start the game
         
         console.log('Fixed mode: Game started with', newTrials.length, 'trials');
@@ -224,12 +231,16 @@ export default function FixedTrainingScreen() {
     // Haptic feedback for stimulus
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     
-    // Speak the letter without "capital" prefix
-    Speech.speak(trial.letter.toLowerCase(), {
-      language: 'en-US',
-      pitch: 1.0,
-      rate: 0.6, // Slower speech rate for clarity
-    });
+    // Stop any ongoing speech and speak the letter
+    Speech.stop();
+    setTimeout(() => {
+      Speech.speak(trial.letter.toLowerCase(), {
+        language: 'en-US',
+        pitch: 1.0,
+        rate: 0.8, // Improved speech rate
+        quality: 'enhanced',
+      });
+    }, 100); // Small delay to ensure previous speech is stopped
     
     // Start fade out after stimulus duration
     const fadeOutTimeout = setTimeout(() => {
@@ -365,12 +376,12 @@ export default function FixedTrainingScreen() {
       }
     }
     
-    // Calculate accuracy for each modality
-    // Standard N-Back accuracy: (Hits + Correct Rejections) / Total Trials
-    const visualCorrectTotal = visualHitsCount + visualCorrectRejectionsCount;
-    const audioCorrectTotal = audioHitsCount + audioCorrectRejectionsCount;
-    const visualAccuracy = validTrials > 0 ? (visualCorrectTotal / validTrials) * 100 : 0;
-    const audioAccuracy = validTrials > 0 ? (audioCorrectTotal / validTrials) * 100 : 0;
+    // Calculate accuracy for each modality with penalty system
+    // N-Back Standard: (Hits + Correct Rejections - Misses - False Alarms) / Total Trials
+    const visualScore = visualHitsCount + visualCorrectRejectionsCount - visualMissesCount - visualFalseAlarmsCount;
+    const audioScore = audioHitsCount + audioCorrectRejectionsCount - audioMissesCount - audioFalseAlarmsCount;
+    const visualAccuracy = validTrials > 0 ? Math.max(0, (visualScore / validTrials) * 100) : 0;
+    const audioAccuracy = validTrials > 0 ? Math.max(0, (audioScore / validTrials) * 100) : 0;
     
     // Calculate hit rate and false alarm rate for detailed feedback
     const visualMatchCount = visualHitsCount + visualMissesCount;
@@ -383,10 +394,10 @@ export default function FixedTrainingScreen() {
     const audioHitRate = audioMatchCount > 0 ? (audioHitsCount / audioMatchCount) * 100 : 0;
     const audioFalseAlarmRate = audioNonMatchCount > 0 ? (audioFalseAlarmsCount / audioNonMatchCount) * 100 : 0;
     
-    // Overall accuracy (weighted average based on actual responses)
-    const totalCorrect = visualCorrectTotal + audioCorrectTotal;
+    // Overall accuracy with penalty system
+    const totalScore = visualScore + audioScore;
     const totalTrials = validTrials * 2; // Visual + Audio trials
-    const overallAccuracy = totalTrials > 0 ? (totalCorrect / totalTrials) * 100 : 0;
+    const overallAccuracy = totalTrials > 0 ? Math.max(0, (totalScore / totalTrials) * 100) : 0;
     
     // Save session data
     if (sessionStartTime && validTrials > 0) {
@@ -412,9 +423,9 @@ export default function FixedTrainingScreen() {
     // Create detailed result message
     const resultMessage = 
       `${t.training.accuracy}: ${overallAccuracy.toFixed(1)}%\n\n` +
-      `👁 Visual: ${visualAccuracy.toFixed(1)}% (${visualCorrectTotal}/${validTrials})\n` +
+      `👁 Visual: ${visualAccuracy.toFixed(1)}% (${visualScore}/${validTrials})\n` +
       `Hit: ${visualHitRate.toFixed(0)}% | FA: ${visualFalseAlarmRate.toFixed(0)}%\n\n` +
-      `👂 Audio: ${audioAccuracy.toFixed(1)}% (${audioCorrectTotal}/${validTrials})\n` +
+      `👂 Audio: ${audioAccuracy.toFixed(1)}% (${audioScore}/${validTrials})\n` +
       `Hit: ${audioHitRate.toFixed(0)}% | FA: ${audioFalseAlarmRate.toFixed(0)}%\n\n` +
       `${t.training.level}: ${N_LEVEL}`;
     
@@ -479,85 +490,84 @@ export default function FixedTrainingScreen() {
         </Text>
       </View>
       
-      <View style={styles.gridContainer}>
-        <View style={styles.progressBarContainer}>
-          <Animated.View 
+      <View style={styles.mainContent}>
+        <View style={styles.gridContainer}>
+          <View style={styles.progressBarContainer}>
+            <Animated.View 
+              style={[
+                styles.progressBar,
+                {
+                  width: progressAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0%', '100%'],
+                  }),
+                }
+              ]} 
+            />
+          </View>
+          
+          <View style={styles.grid}>
+            {Array.from({ length: 3 }).map((_, rowIndex) => (
+              <View key={rowIndex} style={styles.gridRow}>
+                {Array.from({ length: 3 }).map((_, colIndex) => {
+                  const cellIndex = rowIndex * 3 + colIndex;
+                  const isCenter = cellIndex === 4;
+                  return (
+                    <Animated.View
+                      key={cellIndex}
+                      style={[
+                        styles.gridCell,
+                        isCenter && styles.hiddenCell,
+                        highlightPosition === cellIndex && {
+                          backgroundColor: highlightOpacity.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: ['#333', '#00FF00'],
+                          }),
+                          shadowOpacity: highlightOpacity.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [0, 0.8],
+                          }),
+                        },
+                      ]}
+                    />
+                  );
+                })}
+              </View>
+            ))}
+          </View>
+        </View>
+        
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
             style={[
-              styles.progressBar,
-              {
-                width: progressAnimation.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ['0%', '100%'],
-                }),
-              }
+              styles.visualButton, 
+              !canRespond && styles.disabledButton,
+              buttonsPressed.visual && styles.pressedButton
             ]} 
-          />
+            onPress={handleVisualResponse}
+            disabled={!canRespond || !isRunning}
+            activeOpacity={1}
+          >
+            <Text style={styles.buttonText}>
+              <Text style={styles.buttonIcon}>👁️</Text>
+            </Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[
+              styles.audioButton, 
+              !canRespond && styles.disabledButton,
+              buttonsPressed.audio && styles.pressedButton
+            ]} 
+            onPress={handleAudioResponse}
+            disabled={!canRespond || !isRunning}
+            activeOpacity={1}
+          >
+            <Text style={styles.buttonText}>
+              <Text style={styles.buttonIcon}>👂</Text>
+            </Text>
+          </TouchableOpacity>
         </View>
-        
-        <View style={styles.grid}>
-          {Array.from({ length: 3 }).map((_, rowIndex) => (
-            <View key={rowIndex} style={styles.gridRow}>
-              {Array.from({ length: 3 }).map((_, colIndex) => {
-                const cellIndex = rowIndex * 3 + colIndex;
-                const isCenter = cellIndex === 4;
-                return (
-                  <Animated.View
-                    key={cellIndex}
-                    style={[
-                      styles.gridCell,
-                      isCenter && styles.hiddenCell,
-                      highlightPosition === cellIndex && {
-                        backgroundColor: highlightOpacity.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: ['#333', '#00FF00'],
-                        }),
-                        shadowOpacity: highlightOpacity.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0, 0.8],
-                        }),
-                      },
-                    ]}
-                  />
-                );
-              })}
-            </View>
-          ))}
-        </View>
-      </View>
-      
-      <View style={styles.audioContainer}>
-      </View>
-      
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity 
-          style={[
-            styles.visualButton, 
-            !canRespond && styles.disabledButton,
-            buttonsPressed.visual && styles.pressedButton
-          ]} 
-          onPress={handleVisualResponse}
-          disabled={!canRespond || !isRunning}
-          activeOpacity={1}
-        >
-          <Text style={styles.buttonText}>
-            <Text style={styles.buttonIcon}>👁️</Text>
-          </Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={[
-            styles.audioButton, 
-            !canRespond && styles.disabledButton,
-            buttonsPressed.audio && styles.pressedButton
-          ]} 
-          onPress={handleAudioResponse}
-          disabled={!canRespond || !isRunning}
-          activeOpacity={1}
-        >
-          <Text style={styles.buttonText}>
-            <Text style={styles.buttonIcon}>👂</Text>
-          </Text>
-        </TouchableOpacity>
       </View>
 
     </SafeAreaView>
@@ -598,12 +608,15 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: 'center',
   },
+  mainContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
   gridContainer: {
     alignItems: 'center',
     marginBottom: 30,
-    flex: 1,
-    justifyContent: 'center',
-    marginTop: -50,
   },
   progressBarContainer: {
     width: 360,
@@ -650,7 +663,7 @@ const styles = StyleSheet.create({
   },
   audioContainer: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
     height: 0,
     justifyContent: 'center',
   },
@@ -667,23 +680,38 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 30,
-    gap: 20,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    marginTop: 20,
+    paddingBottom: 30,
   },
   visualButton: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 30,
-    paddingVertical: 20,
-    borderRadius: 12,
     flex: 1,
+    height: 80,
+    marginRight: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   audioButton: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 30,
-    paddingVertical: 20,
-    borderRadius: 12,
     flex: 1,
+    height: 80,
+    marginLeft: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   disabledButton: {
     opacity: 0.3,

@@ -32,6 +32,9 @@ export interface SessionStats {
 export interface UserSettings {
   initialN: number;
   fixedN: number; // Fixed training N-level
+  adaptiveN: number; // Persistent adaptive N-level
+  lastLevelUpDate: string | null; // Track last level up date
+  dailyCheckDate: string | null; // Track daily level check
   trialCount: number;
   stimulusDuration: number;
   responseWindow: number;

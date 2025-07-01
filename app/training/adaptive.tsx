@@ -14,12 +14,12 @@ interface Trial {
 }
 
 export default function AdaptiveTrainingScreen() {
-  const { settings } = useSettingsStore();
+  const { settings, updateAdaptiveLevel, checkDailyLevelDecrease } = useSettingsStore();
   const { addSession } = useStatsStore();
   const t = useTranslations(settings.language);
   
-  // Game state
-  const [nLevel, setNLevel] = useState(2);
+  // Game state - use persistent adaptive level
+  const [nLevel, setNLevel] = useState(settings.adaptiveN || 2);
   const [currentTrial, setCurrentTrial] = useState(0);
   const [trials, setTrials] = useState<Trial[]>([]);
   const [isRunning, setIsRunning] = useState(false);
@@ -40,6 +40,19 @@ export default function AdaptiveTrainingScreen() {
   const responseAnimation = useRef(new Animated.Value(0)).current;
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const highlightOpacity = useRef(new Animated.Value(0)).current;
+  
+  // Level up celebration effect
+  const [showLevelUpEffect, setShowLevelUpEffect] = useState(false);
+  const levelUpScale = useRef(new Animated.Value(0)).current;
+  const levelUpOpacity = useRef(new Animated.Value(0)).current;
+  const confettiAnimations = useRef(
+    Array.from({ length: 20 }, () => ({
+      translateY: new Animated.Value(-100),
+      translateX: new Animated.Value(0),
+      rotate: new Animated.Value(0),
+      opacity: new Animated.Value(1),
+    }))
+  ).current;
   
   // Refs
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -118,12 +131,98 @@ export default function AdaptiveTrainingScreen() {
   const animateResponse = (isCorrect: boolean) => {
     // Remove response animation to prevent layout shifts
   };
+  
+  // Level up celebration effect
+  const triggerLevelUpEffect = () => {
+    setShowLevelUpEffect(true);
+    
+    // Level up text animation
+    Animated.sequence([
+      Animated.parallel([
+        Animated.spring(levelUpScale, {
+          toValue: 1,
+          tension: 50,
+          friction: 3,
+          useNativeDriver: true,
+        }),
+        Animated.timing(levelUpOpacity, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]),
+      Animated.delay(2000),
+      Animated.timing(levelUpOpacity, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setShowLevelUpEffect(false);
+      levelUpScale.setValue(0);
+    });
+    
+    // Confetti animation
+    const confettiAnimationList = confettiAnimations.map((confetti, index) => {
+      const delay = index * 50;
+      const randomX = (Math.random() - 0.5) * 400;
+      const randomRotation = Math.random() * 720;
+      
+      return Animated.sequence([
+        Animated.delay(delay),
+        Animated.parallel([
+          Animated.timing(confetti.translateY, {
+            toValue: 800,
+            duration: 2000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(confetti.translateX, {
+            toValue: randomX,
+            duration: 2000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(confetti.rotate, {
+            toValue: randomRotation,
+            duration: 2000,
+            useNativeDriver: true,
+          }),
+          Animated.sequence([
+            Animated.delay(1500),
+            Animated.timing(confetti.opacity, {
+              toValue: 0,
+              duration: 500,
+              useNativeDriver: true,
+            }),
+          ]),
+        ]),
+      ]);
+    });
+    
+    Animated.parallel(confettiAnimationList).start(() => {
+      // Reset confetti positions
+      confettiAnimations.forEach(confetti => {
+        confetti.translateY.setValue(-100);
+        confetti.translateX.setValue(0);
+        confetti.rotate.setValue(0);
+        confetti.opacity.setValue(1);
+      });
+    });
+    
+    // Haptic feedback
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  };
 
 
   // Initialize game when screen comes into focus (including first load and returning from back button)
   useFocusEffect(
     useCallback(() => {
       console.log('Screen focused, initializing game...');
+      
+      // Check for daily level decrease on app focus
+      checkDailyLevelDecrease();
+      
+      // Update nLevel from persistent settings
+      setNLevel(settings.adaptiveN || 2);
       
       // Clear any existing timeouts first
       if (intervalRef.current) {
@@ -155,8 +254,13 @@ export default function AdaptiveTrainingScreen() {
       const startDelay = setTimeout(() => {
         console.log('Starting new game...');
         
-        // Generate new trials
-        const newTrials = generateTrials(nLevel, TOTAL_TRIALS);
+        // Stop any ongoing speech first
+        Speech.stop();
+        
+        // Generate new trials with current adaptive level
+        const currentLevel = settings.adaptiveN || 2;
+        setNLevel(currentLevel);
+        const newTrials = generateTrials(currentLevel, TOTAL_TRIALS);
         
         // Set initial state
         setTrials(newTrials);
@@ -170,6 +274,10 @@ export default function AdaptiveTrainingScreen() {
         setShowingStimulus(false);
         setCanRespond(false);
         setButtonsPressed({visual: false, audio: false});
+        
+        // Reset highlight opacity before starting
+        highlightOpacity.setValue(0);
+        
         setIsRunning(true); // Start the game
         
         console.log('Game started with', newTrials.length, 'trials');
@@ -225,12 +333,16 @@ export default function AdaptiveTrainingScreen() {
     // Haptic feedback for stimulus
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     
-    // Speak the letter without "capital" prefix
-    Speech.speak(trial.letter.toLowerCase(), {
-      language: 'en-US',
-      pitch: 1.0,
-      rate: 0.6, // Slower speech rate for clarity
-    });
+    // Stop any ongoing speech and speak the letter
+    Speech.stop();
+    setTimeout(() => {
+      Speech.speak(trial.letter.toLowerCase(), {
+        language: 'en-US',
+        pitch: 1.0,
+        rate: 0.8, // Improved speech rate
+        quality: 'enhanced',
+      });
+    }, 100); // Small delay to ensure previous speech is stopped
     
     // Start fade out after stimulus duration
     const fadeOutTimeout = setTimeout(() => {
@@ -366,12 +478,12 @@ export default function AdaptiveTrainingScreen() {
       }
     }
     
-    // Calculate accuracy for each modality
-    // Standard N-Back accuracy: (Hits + Correct Rejections) / Total Trials
-    const visualCorrectTotal = visualHitsCount + visualCorrectRejectionsCount;
-    const audioCorrectTotal = audioHitsCount + audioCorrectRejectionsCount;
-    const visualAccuracy = validTrials > 0 ? (visualCorrectTotal / validTrials) * 100 : 0;
-    const audioAccuracy = validTrials > 0 ? (audioCorrectTotal / validTrials) * 100 : 0;
+    // Calculate accuracy for each modality with penalty system
+    // N-Back Standard: (Hits + Correct Rejections - Misses - False Alarms) / Total Trials
+    const visualScore = visualHitsCount + visualCorrectRejectionsCount - visualMissesCount - visualFalseAlarmsCount;
+    const audioScore = audioHitsCount + audioCorrectRejectionsCount - audioMissesCount - audioFalseAlarmsCount;
+    const visualAccuracy = validTrials > 0 ? Math.max(0, (visualScore / validTrials) * 100) : 0;
+    const audioAccuracy = validTrials > 0 ? Math.max(0, (audioScore / validTrials) * 100) : 0;
     
     // Calculate hit rate and false alarm rate for detailed feedback
     const visualMatchCount = visualHitsCount + visualMissesCount;
@@ -384,10 +496,10 @@ export default function AdaptiveTrainingScreen() {
     const audioHitRate = audioMatchCount > 0 ? (audioHitsCount / audioMatchCount) * 100 : 0;
     const audioFalseAlarmRate = audioNonMatchCount > 0 ? (audioFalseAlarmsCount / audioNonMatchCount) * 100 : 0;
     
-    // Overall accuracy (weighted average based on actual responses)
-    const totalCorrect = visualCorrectTotal + audioCorrectTotal;
+    // Overall accuracy with penalty system
+    const totalScore = visualScore + audioScore;
     const totalTrials = validTrials * 2; // Visual + Audio trials
-    const overallAccuracy = totalTrials > 0 ? (totalCorrect / totalTrials) * 100 : 0;
+    const overallAccuracy = totalTrials > 0 ? Math.max(0, (totalScore / totalTrials) * 100) : 0;
     
     // Save session data
     if (sessionStartTime && validTrials > 0) {
@@ -413,9 +525,9 @@ export default function AdaptiveTrainingScreen() {
     // Create detailed result message
     const resultMessage = 
       `${t.training.accuracy}: ${overallAccuracy.toFixed(1)}%\n\n` +
-      `👁 Visual: ${visualAccuracy.toFixed(1)}% (${visualCorrectTotal}/${validTrials})\n` +
+      `👁 Visual: ${visualAccuracy.toFixed(1)}% (${visualScore}/${validTrials})\n` +
       `Hit: ${visualHitRate.toFixed(0)}% | FA: ${visualFalseAlarmRate.toFixed(0)}%\n\n` +
-      `👂 Audio: ${audioAccuracy.toFixed(1)}% (${audioCorrectTotal}/${validTrials})\n` +
+      `👂 Audio: ${audioAccuracy.toFixed(1)}% (${audioScore}/${validTrials})\n` +
       `Hit: ${audioHitRate.toFixed(0)}% | FA: ${audioFalseAlarmRate.toFixed(0)}%\n\n` +
       `${t.training.level}: ${nLevel}`;
     
@@ -438,14 +550,25 @@ export default function AdaptiveTrainingScreen() {
       ]
     );
     
-    // Adaptive logic: adjust N-level based on performance
+    // Adaptive logic: adjust N-level based on performance and persist
     if (validTrials >= 8) {
       if (overallAccuracy >= 80 && nLevel < 9) {
-        setNLevel(nLevel + 1);
-        Alert.alert(t.training.levelUp, `${t.training.level}: ${nLevel + 1}`);
+        const newLevel = nLevel + 1;
+        setNLevel(newLevel);
+        updateAdaptiveLevel(newLevel); // Persist the level up
+        
+        // Trigger celebration effect instead of alert
+        setTimeout(() => {
+          triggerLevelUpEffect();
+          setTimeout(() => {
+            Alert.alert(t.training.levelUp, `${t.training.level}: ${newLevel}`);
+          }, 2500);
+        }, 500);
       } else if (overallAccuracy < 50 && nLevel > 1) {
-        setNLevel(nLevel - 1);
-        Alert.alert(t.training.levelDown, `${t.training.level}: ${nLevel - 1}`);
+        const newLevel = nLevel - 1;
+        setNLevel(newLevel);
+        updateAdaptiveLevel(newLevel); // Persist the level down
+        Alert.alert(t.training.levelDown, `${t.training.level}: ${newLevel}`);
       }
     }
   };
@@ -491,86 +614,126 @@ export default function AdaptiveTrainingScreen() {
         </Text>
       </View>
       
-      <View style={styles.gridContainer}>
-        <View style={styles.progressBarContainer}>
-          <Animated.View 
+      <View style={styles.mainContent}>
+        <View style={styles.gridContainer}>
+          <View style={styles.progressBarContainer}>
+            <Animated.View 
+              style={[
+                styles.progressBar,
+                {
+                  width: progressAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0%', '100%'],
+                  }),
+                }
+              ]} 
+            />
+          </View>
+          
+          <View style={styles.grid}>
+            {Array.from({ length: 3 }).map((_, rowIndex) => (
+              <View key={rowIndex} style={styles.gridRow}>
+                {Array.from({ length: 3 }).map((_, colIndex) => {
+                  const cellIndex = rowIndex * 3 + colIndex;
+                  const isCenter = cellIndex === 4;
+                  return (
+                    <Animated.View
+                      key={cellIndex}
+                      style={[
+                        styles.gridCell,
+                        isCenter && styles.hiddenCell,
+                        highlightPosition === cellIndex && {
+                          backgroundColor: highlightOpacity.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: ['#333', '#00FF00'],
+                          }),
+                          shadowOpacity: highlightOpacity.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [0, 0.8],
+                          }),
+                        },
+                      ]}
+                    />
+                  );
+                })}
+              </View>
+            ))}
+          </View>
+        </View>
+        
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
             style={[
-              styles.progressBar,
-              {
-                width: progressAnimation.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ['0%', '100%'],
-                }),
-              }
+              styles.visualButton, 
+              !canRespond && styles.disabledButton,
+              buttonsPressed.visual && styles.pressedButton
             ]} 
-          />
+            onPress={handleVisualResponse}
+            disabled={!canRespond || !isRunning}
+            activeOpacity={1}
+          >
+            <Text style={styles.buttonText}>
+              <Text style={styles.buttonIcon}>👁️</Text>
+            </Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[
+              styles.audioButton, 
+              !canRespond && styles.disabledButton,
+              buttonsPressed.audio && styles.pressedButton
+            ]} 
+            onPress={handleAudioResponse}
+            disabled={!canRespond || !isRunning}
+            activeOpacity={1}
+          >
+            <Text style={styles.buttonText}>
+              <Text style={styles.buttonIcon}>👂</Text>
+            </Text>
+          </TouchableOpacity>
         </View>
-        
-        <View style={styles.grid}>
-          {Array.from({ length: 3 }).map((_, rowIndex) => (
-            <View key={rowIndex} style={styles.gridRow}>
-              {Array.from({ length: 3 }).map((_, colIndex) => {
-                const cellIndex = rowIndex * 3 + colIndex;
-                const isCenter = cellIndex === 4;
-                return (
-                  <Animated.View
-                    key={cellIndex}
-                    style={[
-                      styles.gridCell,
-                      isCenter && styles.hiddenCell,
-                      highlightPosition === cellIndex && {
-                        backgroundColor: highlightOpacity.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: ['#333', '#00FF00'],
-                        }),
-                        shadowOpacity: highlightOpacity.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0, 0.8],
-                        }),
-                      },
-                    ]}
-                  />
-                );
-              })}
-            </View>
+      </View>
+      
+      {/* Level Up Celebration Effect */}
+      {showLevelUpEffect && (
+        <View style={styles.celebrationOverlay}>
+          {/* Confetti */}
+          {confettiAnimations.map((confetti, index) => (
+            <Animated.View
+              key={index}
+              style={[
+                styles.confetti,
+                {
+                  backgroundColor: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4'][index % 5],
+                  transform: [
+                    { translateX: confetti.translateX },
+                    { translateY: confetti.translateY },
+                    { rotate: confetti.rotate.interpolate({
+                      inputRange: [0, 360],
+                      outputRange: ['0deg', '360deg'],
+                    }) },
+                  ],
+                  opacity: confetti.opacity,
+                },
+              ]}
+            />
           ))}
+          
+          {/* Level Up Text */}
+          <Animated.View
+            style={[
+              styles.levelUpContainer,
+              {
+                transform: [{ scale: levelUpScale }],
+                opacity: levelUpOpacity,
+              },
+            ]}
+          >
+            <Text style={styles.levelUpText}>🎉 LEVEL UP! 🎉</Text>
+            <Text style={styles.levelUpSubtext}>N-Level {nLevel}</Text>
+          </Animated.View>
         </View>
-      </View>
-      
-      <View style={styles.audioContainer}>
-      </View>
-      
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity 
-          style={[
-            styles.visualButton, 
-            !canRespond && styles.disabledButton,
-            buttonsPressed.visual && styles.pressedButton
-          ]} 
-          onPress={handleVisualResponse}
-          disabled={!canRespond || !isRunning}
-          activeOpacity={1}
-        >
-          <Text style={styles.buttonText}>
-            <Text style={styles.buttonIcon}>👁️</Text>
-          </Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={[
-            styles.audioButton, 
-            !canRespond && styles.disabledButton,
-            buttonsPressed.audio && styles.pressedButton
-          ]} 
-          onPress={handleAudioResponse}
-          disabled={!canRespond || !isRunning}
-          activeOpacity={1}
-        >
-          <Text style={styles.buttonText}>
-            <Text style={styles.buttonIcon}>👂</Text>
-          </Text>
-        </TouchableOpacity>
-      </View>
+      )}
 
     </SafeAreaView>
   );
@@ -610,12 +773,15 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: 'center',
   },
+  mainContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
   gridContainer: {
     alignItems: 'center',
     marginBottom: 30,
-    flex: 1,
-    justifyContent: 'center',
-    marginTop: -50,
   },
   progressBarContainer: {
     width: 360,
@@ -662,7 +828,7 @@ const styles = StyleSheet.create({
   },
   audioContainer: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
     height: 0,
     justifyContent: 'center',
   },
@@ -679,23 +845,38 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 30,
-    gap: 20,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    marginTop: 20,
+    paddingBottom: 30,
   },
   visualButton: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 30,
-    paddingVertical: 20,
-    borderRadius: 12,
     flex: 1,
+    height: 80,
+    marginRight: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   audioButton: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 30,
-    paddingVertical: 20,
-    borderRadius: 12,
     flex: 1,
+    height: 80,
+    marginLeft: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   disabledButton: {
     opacity: 0.3,
@@ -739,5 +920,45 @@ const styles = StyleSheet.create({
   buttonKanji: {
     fontSize: 28,
     fontWeight: '700',
+  },
+  // Level up celebration styles
+  celebrationOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    pointerEvents: 'none',
+    zIndex: 1000,
+  },
+  confetti: {
+    position: 'absolute',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  levelUpContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    borderRadius: 20,
+    paddingHorizontal: 40,
+    paddingVertical: 20,
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#FFD700',
+  },
+  levelUpText: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#FFD700',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  levelUpSubtext: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    textAlign: 'center',
   },
 });
