@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, Switch, TouchableOpacity, Alert, Modal, FlatList, View as RNView } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { StyleSheet, SafeAreaView, ScrollView, Switch, TouchableOpacity, Alert, Modal, FlatList, View, Text } from 'react-native';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useTranslations } from '@/utils/i18n';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -67,29 +66,24 @@ export default function SettingsScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: isDark ? '#0A0A0B' : '#FFFFFF' }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: isDark ? '#000000' : '#FFFFFF' }]}>
       <ScrollView 
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header with gradient effect */}
-        <View style={styles.headerContainer}>
-          <LinearGradient
-            colors={isDark ? ['#0A0A0B', '#0A0A0B'] : ['#FFFFFF', '#FFFFFF']}
-            style={styles.headerGradient}
-          >
-            <Text style={[styles.title, { color: isDark ? '#FFFFFF' : '#000000' }]}>
-              {t.settings.title}
-            </Text>
-            <Text style={[styles.subtitle, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
-              Customize your training experience
-            </Text>
-          </LinearGradient>
+        {/* Header with clean design */}
+        <View style={[styles.headerContainer, { backgroundColor: isDark ? '#000000' : '#FFFFFF' }]}>
+          <Text style={[styles.title, { color: isDark ? '#FFFFFF' : '#000000' }]}>
+            {t.settings.title}
+          </Text>
+          <Text style={[styles.subtitle, { color: isDark ? '#AAAAAA' : '#666666' }]}>
+            Customize your training experience
+          </Text>
         </View>
         
         {/* How to Play Section - First Priority */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+          <Text style={[styles.sectionTitle, { color: isDark ? '#FFFFFF' : '#6B7280' }]}>
             {settings.language === 'ja' ? 'ヘルプ・情報' : 'Help & Info'}
           </Text>
           
@@ -97,8 +91,9 @@ export default function SettingsScreen() {
             style={[
               styles.settingCard,
               { 
-                backgroundColor: isDark ? '#111113' : '#F9FAFB',
-                borderColor: isDark ? '#1F2937' : '#E5E7EB',
+                backgroundColor: isDark ? '#1C1C1C' : '#F9FAFB',
+                borderColor: isDark ? '#404040' : '#E5E7EB',
+                borderWidth: 1,
               }
             ]}
             onPress={() => setShowHowToPlayModal(true)}
@@ -117,7 +112,7 @@ export default function SettingsScreen() {
               <Text style={[styles.settingLabel, { color: isDark ? '#FFFFFF' : '#111827' }]}>
                 {settings.language === 'ja' ? 'N-Backの遊び方' : 'How to Play N-Back'}
               </Text>
-              <Text style={[styles.settingDescription, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
+              <Text style={[styles.settingDescription, { color: isDark ? '#CCCCCC' : '#9CA3AF' }]}>
                 {settings.language === 'ja' ? 'ルール、スコア、効果について学ぶ' : 'Learn the rules, scoring, and benefits'}
               </Text>
             </View>
@@ -125,14 +120,9 @@ export default function SettingsScreen() {
             <View style={[
               styles.valueChip,
               { 
-                backgroundColor: isDark ? '#1F2937' : '#EEF2FF',
-                borderWidth: 2,
-                borderColor: '#6366F1',
-                shadowColor: '#6366F1',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.15,
-                shadowRadius: 4,
-                elevation: 2,
+                backgroundColor: isDark ? '#2A2A2A' : '#EEF2FF',
+                borderWidth: 1,
+                borderColor: isDark ? '#6366F1' : '#6366F1',
               }
             ]}>
               <Text style={[styles.valueText, { color: '#6366F1' }]}>
@@ -145,7 +135,7 @@ export default function SettingsScreen() {
         
         {/* Training Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+          <Text style={[styles.sectionTitle, { color: isDark ? '#FFFFFF' : '#6B7280' }]}>
             {t.settings.trainingSettings}
           </Text>
           
@@ -153,8 +143,9 @@ export default function SettingsScreen() {
             style={[
               styles.settingCard,
               { 
-                backgroundColor: isDark ? '#111113' : '#F9FAFB',
-                borderColor: isDark ? '#1F2937' : '#E5E7EB',
+                backgroundColor: isDark ? '#1C1C1C' : '#F9FAFB',
+                borderColor: isDark ? '#404040' : '#E5E7EB',
+                borderWidth: 1,
               }
             ]}
             onPress={() => setShowNLevelModal(true)}
@@ -173,7 +164,7 @@ export default function SettingsScreen() {
               <Text style={[styles.settingLabel, { color: isDark ? '#FFFFFF' : '#111827' }]}>
                 {t.settings.fixedNLevel}
               </Text>
-              <Text style={[styles.settingDescription, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
+              <Text style={[styles.settingDescription, { color: isDark ? '#CCCCCC' : '#9CA3AF' }]}>
                 {t.settings.fixedNDescription}
               </Text>
             </View>
@@ -181,7 +172,7 @@ export default function SettingsScreen() {
             <View style={[
               styles.valueChip,
               { 
-                backgroundColor: isDark ? '#1F2937' : '#EEF2FF',
+                backgroundColor: isDark ? '#2A2A2A' : '#EEF2FF',
                 borderWidth: 2,
                 borderColor: '#3B82F6',
                 shadowColor: '#3B82F6',
@@ -201,7 +192,7 @@ export default function SettingsScreen() {
         
         {/* Feedback Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+          <Text style={[styles.sectionTitle, { color: isDark ? '#FFFFFF' : '#6B7280' }]}>
             {t.settings.audioFeedback}
           </Text>
           
@@ -225,7 +216,7 @@ export default function SettingsScreen() {
               <Text style={[styles.settingLabel, { color: isDark ? '#FFFFFF' : '#111827' }]}>
                 {t.settings.vibration}
               </Text>
-              <Text style={[styles.settingDescription, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
+              <Text style={[styles.settingDescription, { color: isDark ? '#CCCCCC' : '#9CA3AF' }]}>
                 {t.settings.vibrationDescription}
               </Text>
             </View>
@@ -233,16 +224,16 @@ export default function SettingsScreen() {
             <Switch
               value={settings.vibrationEnabled}
               onValueChange={(value) => updateSettings({ vibrationEnabled: value })}
-              trackColor={{ false: isDark ? '#374151' : '#E5E7EB', true: '#8B5CF6' }}
+              trackColor={{ false: isDark ? '#404040' : '#E5E7EB', true: '#8B5CF6' }}
               thumbColor="#FFFFFF"
-              ios_backgroundColor={isDark ? '#374151' : '#E5E7EB'}
+              ios_backgroundColor={isDark ? '#404040' : '#E5E7EB'}
             />
           </View>
         </View>
         
         {/* Appearance Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+          <Text style={[styles.sectionTitle, { color: isDark ? '#FFFFFF' : '#6B7280' }]}>
             {t.settings.appearance}
           </Text>
           
@@ -250,8 +241,9 @@ export default function SettingsScreen() {
             style={[
               styles.settingCard,
               { 
-                backgroundColor: isDark ? '#111113' : '#F9FAFB',
-                borderColor: isDark ? '#1F2937' : '#E5E7EB',
+                backgroundColor: isDark ? '#1C1C1C' : '#F9FAFB',
+                borderColor: isDark ? '#404040' : '#E5E7EB',
+                borderWidth: 1,
               }
             ]}
             onPress={() => updateSettings({ theme: settings.theme === 'dark' ? 'light' : 'dark' })}
@@ -270,7 +262,7 @@ export default function SettingsScreen() {
               <Text style={[styles.settingLabel, { color: isDark ? '#FFFFFF' : '#111827' }]}>
                 {t.settings.theme}
               </Text>
-              <Text style={[styles.settingDescription, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
+              <Text style={[styles.settingDescription, { color: isDark ? '#CCCCCC' : '#9CA3AF' }]}>
                 {t.settings.themeDescription}
               </Text>
             </View>
@@ -299,8 +291,9 @@ export default function SettingsScreen() {
             style={[
               styles.settingCard,
               { 
-                backgroundColor: isDark ? '#111113' : '#F9FAFB',
-                borderColor: isDark ? '#1F2937' : '#E5E7EB',
+                backgroundColor: isDark ? '#1C1C1C' : '#F9FAFB',
+                borderColor: isDark ? '#404040' : '#E5E7EB',
+                borderWidth: 1,
               }
             ]}
             onPress={() => setShowLanguageModal(true)}
@@ -319,7 +312,7 @@ export default function SettingsScreen() {
               <Text style={[styles.settingLabel, { color: isDark ? '#FFFFFF' : '#111827' }]}>
                 {t.settings.language}
               </Text>
-              <Text style={[styles.settingDescription, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
+              <Text style={[styles.settingDescription, { color: isDark ? '#CCCCCC' : '#9CA3AF' }]}>
                 {t.settings.languageDescription}
               </Text>
             </View>
@@ -383,15 +376,15 @@ export default function SettingsScreen() {
           <View style={[
             styles.modalContent,
             { 
-              backgroundColor: isDark ? '#111113' : '#FFFFFF',
-              borderColor: isDark ? '#1F2937' : '#E5E7EB',
+              backgroundColor: isDark ? '#1C1C1C' : '#FFFFFF',
+              borderColor: isDark ? '#404040' : '#E5E7EB',
             }
           ]}>
             <View style={[
               styles.modalHeader,
               { 
-                backgroundColor: isDark ? '#0A0A0B' : '#F9FAFB',
-                borderBottomColor: isDark ? '#1F2937' : '#E5E7EB',
+                backgroundColor: isDark ? '#111111' : '#F9FAFB',
+                borderBottomColor: isDark ? '#404040' : '#E5E7EB',
               }
             ]}>
               <Text style={[styles.modalTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
@@ -400,11 +393,11 @@ export default function SettingsScreen() {
               <TouchableOpacity 
                 style={[
                   styles.modalCloseButton,
-                  { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }
+                  { backgroundColor: isDark ? '#404040' : '#F3F4F6' }
                 ]}
                 onPress={() => setShowNLevelModal(false)}
               >
-                <Text style={[styles.modalCloseText, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+                <Text style={[styles.modalCloseText, { color: isDark ? '#FFFFFF' : '#6B7280' }]}>
                   ✕
                 </Text>
               </TouchableOpacity>
@@ -419,8 +412,8 @@ export default function SettingsScreen() {
                   style={[
                     styles.modalOption,
                     { 
-                      backgroundColor: isDark ? '#0A0A0B' : '#F9FAFB',
-                      borderColor: isDark ? '#1F2937' : '#E5E7EB',
+                      backgroundColor: isDark ? '#2A2A2A' : '#F9FAFB',
+                      borderColor: isDark ? '#505050' : '#E5E7EB',
                     },
                     settings.fixedN === item.value && styles.modalOptionSelected,
                     item.premium && !settings.isPremium && styles.modalOptionLocked
@@ -461,15 +454,15 @@ export default function SettingsScreen() {
           <View style={[
             styles.modalContent,
             { 
-              backgroundColor: isDark ? '#111113' : '#FFFFFF',
-              borderColor: isDark ? '#1F2937' : '#E5E7EB',
+              backgroundColor: isDark ? '#1C1C1C' : '#FFFFFF',
+              borderColor: isDark ? '#404040' : '#E5E7EB',
             }
           ]}>
             <View style={[
               styles.modalHeader,
               { 
-                backgroundColor: isDark ? '#0A0A0B' : '#F9FAFB',
-                borderBottomColor: isDark ? '#1F2937' : '#E5E7EB',
+                backgroundColor: isDark ? '#111111' : '#F9FAFB',
+                borderBottomColor: isDark ? '#404040' : '#E5E7EB',
               }
             ]}>
               <Text style={[styles.modalTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
@@ -478,11 +471,11 @@ export default function SettingsScreen() {
               <TouchableOpacity 
                 style={[
                   styles.modalCloseButton,
-                  { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }
+                  { backgroundColor: isDark ? '#404040' : '#F3F4F6' }
                 ]}
                 onPress={() => setShowLanguageModal(false)}
               >
-                <Text style={[styles.modalCloseText, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+                <Text style={[styles.modalCloseText, { color: isDark ? '#FFFFFF' : '#6B7280' }]}>
                   ✕
                 </Text>
               </TouchableOpacity>
@@ -497,8 +490,8 @@ export default function SettingsScreen() {
                   style={[
                     styles.modalOption,
                     { 
-                      backgroundColor: isDark ? '#0A0A0B' : '#F9FAFB',
-                      borderColor: isDark ? '#1F2937' : '#E5E7EB',
+                      backgroundColor: isDark ? '#2A2A2A' : '#F9FAFB',
+                      borderColor: isDark ? '#505050' : '#E5E7EB',
                     },
                     settings.language === item.value && styles.modalOptionSelected
                   ]}
@@ -534,15 +527,15 @@ export default function SettingsScreen() {
           <View style={[
             styles.tutorialModalContent,
             { 
-              backgroundColor: isDark ? '#111113' : '#FFFFFF',
-              borderColor: isDark ? '#1F2937' : '#E5E7EB',
+              backgroundColor: isDark ? '#1C1C1C' : '#FFFFFF',
+              borderColor: isDark ? '#404040' : '#E5E7EB',
             }
           ]}>
             <View style={[
               styles.modalHeader,
               { 
-                backgroundColor: isDark ? '#0A0A0B' : '#F9FAFB',
-                borderBottomColor: isDark ? '#1F2937' : '#E5E7EB',
+                backgroundColor: isDark ? '#111111' : '#F9FAFB',
+                borderBottomColor: isDark ? '#404040' : '#E5E7EB',
               }
             ]}>
               <Text style={[styles.modalTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
@@ -551,11 +544,11 @@ export default function SettingsScreen() {
               <TouchableOpacity 
                 style={[
                   styles.modalCloseButton,
-                  { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }
+                  { backgroundColor: isDark ? '#404040' : '#F3F4F6' }
                 ]}
                 onPress={() => setShowHowToPlayModal(false)}
               >
-                <Text style={[styles.modalCloseText, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+                <Text style={[styles.modalCloseText, { color: isDark ? '#FFFFFF' : '#6B7280' }]}>
                   ✕
                 </Text>
               </TouchableOpacity>
@@ -570,7 +563,7 @@ export default function SettingsScreen() {
                 <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
                   {settings.language === 'ja' ? '🧠 N-Backとは？' : '🧠 What is N-Back?'}
                 </Text>
-                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                <Text style={[styles.tutorialText, { color: isDark ? '#CCCCCC' : '#6B7280' }]}>
                   {settings.language === 'ja' 
                     ? 'N-Backは作業記憶（ワーキングメモリー）を鍛える科学的に証明されたトレーニングです。視覚と聴覚の刺激を記憶し、N個前の刺激と一致するかを判断します。'
                     : 'N-Back is a scientifically proven training method for working memory. You need to remember visual and auditory stimuli and determine if they match stimuli from N steps back.'}
@@ -582,7 +575,7 @@ export default function SettingsScreen() {
                 <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
                   {settings.language === 'ja' ? '🎮 遊び方' : '🎮 How to Play'}
                 </Text>
-                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                <Text style={[styles.tutorialText, { color: isDark ? '#CCCCCC' : '#6B7280' }]}>
                   {settings.language === 'ja'
                     ? '1. グリッド上の光る位置（視覚）と読み上げられる文字（聴覚）を記憶\n\n2. 現在の刺激がN個前の刺激と一致する場合、対応するボタンを押す\n\n3. 一致しない場合は何も押さない'
                     : '1. Remember the glowing position (visual) and spoken letter (audio)\n\n2. Press the corresponding button if current stimulus matches the one from N steps back\n\n3. Do nothing if they don\'t match'}
@@ -594,7 +587,7 @@ export default function SettingsScreen() {
                 <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
                   {settings.language === 'ja' ? '📊 スコアシステム' : '📊 Scoring System'}
                 </Text>
-                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                <Text style={[styles.tutorialText, { color: isDark ? '#CCCCCC' : '#6B7280' }]}>
                   {settings.language === 'ja'
                     ? '✅ ヒット: 一致時に正しく押した\n❌ ミス: 一致時に押さなかった\n✅ 正しい拒否: 非一致時に正しく押さなかった\n❌ 誤報: 非一致時に間違って押した\n\n正答率 = (ヒット + 正しい拒否) ÷ 全試行数 × 100%'
                     : '✅ Hit: Correctly pressed when matching\n❌ Miss: Didn\'t press when matching\n✅ Correct Rejection: Correctly didn\'t press when not matching\n❌ False Alarm: Incorrectly pressed when not matching\n\nAccuracy = (Hits + Correct Rejections) ÷ Total Trials × 100%'}
@@ -606,7 +599,7 @@ export default function SettingsScreen() {
                 <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
                   {settings.language === 'ja' ? '🎯 トレーニングモード' : '🎯 Training Modes'}
                 </Text>
-                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                <Text style={[styles.tutorialText, { color: isDark ? '#CCCCCC' : '#6B7280' }]}>
                   {settings.language === 'ja'
                     ? '🔵 適応型トレーニング\nパフォーマンスに基づいて自動的にレベルが調整されます。常に最適な難易度でトレーニングできます。\n\n🟢 固定型トレーニング\n設定したNレベルで一定の難易度を維持します。特定のレベルを集中的に練習したい場合に最適です。'
                     : '🔵 Adaptive Training\nAutomatically adjusts level based on your performance. Always trains at your optimal difficulty level.\n\n🟢 Fixed Training\nMaintains consistent difficulty at your selected N-level. Perfect for focused practice at a specific level.'}
@@ -618,7 +611,7 @@ export default function SettingsScreen() {
                 <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
                   {settings.language === 'ja' ? '📈 レベル調整ルール' : '📈 Level Adjustment Rules'}
                 </Text>
-                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                <Text style={[styles.tutorialText, { color: isDark ? '#CCCCCC' : '#6B7280' }]}>
                   {settings.language === 'ja'
                     ? '🔥 レベルアップ: 正答率80%以上でN+1\n❄️ レベルダウン: 正答率50%未満でN-1\n\n適応モードでは自動調整されます。'
                     : '🔥 Level Up: 80%+ accuracy → N+1\n❄️ Level Down: <50% accuracy → N-1\n\nAdaptive mode adjusts automatically.'}
@@ -630,7 +623,7 @@ export default function SettingsScreen() {
                 <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
                   {settings.language === 'ja' ? '🌟 トレーニング効果' : '🌟 Training Benefits'}
                 </Text>
-                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                <Text style={[styles.tutorialText, { color: isDark ? '#CCCCCC' : '#6B7280' }]}>
                   {settings.language === 'ja'
                     ? '• 作業記憶の向上\n• 集中力と注意力の強化\n• 情報処理速度の向上\n• 認知的柔軟性の向上\n• 学習能力の向上\n\n継続的な練習で効果を実感できます！'
                     : '• Improved working memory\n• Enhanced focus and attention\n• Faster information processing\n• Better cognitive flexibility\n• Enhanced learning ability\n\nConsistent practice yields real results!'}
@@ -642,7 +635,7 @@ export default function SettingsScreen() {
                 <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
                   {settings.language === 'ja' ? '💡 コツ' : '💡 Tips'}
                 </Text>
-                <Text style={[styles.tutorialText, { color: isDark ? '#D1D5DB' : '#6B7280' }]}>
+                <Text style={[styles.tutorialText, { color: isDark ? '#CCCCCC' : '#6B7280' }]}>
                   {settings.language === 'ja'
                     ? '• 確信がある時だけボタンを押す\n• 迷った時は押さない方が安全\n• 集中力を維持する\n• 毎日短時間でも継続する'
                     : '• Only press when you\'re confident\n• When in doubt, don\'t press\n• Maintain focus throughout\n• Practice daily, even if briefly'}
@@ -652,7 +645,7 @@ export default function SettingsScreen() {
             
             <View style={[
               styles.tutorialFooter,
-              { backgroundColor: isDark ? '#0A0A0B' : '#F9FAFB' }
+              { backgroundColor: isDark ? '#111111' : '#F9FAFB' }
             ]}>
               <TouchableOpacity 
                 style={[
@@ -683,8 +676,6 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingTop: 10,
     paddingBottom: 30,
-  },
-  headerGradient: {
     paddingHorizontal: 24,
     paddingVertical: 20,
   },
