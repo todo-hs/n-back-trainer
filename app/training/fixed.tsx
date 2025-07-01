@@ -262,13 +262,15 @@ export default function FixedTrainingScreen() {
     
     // Enhanced feedback (no score tracking here anymore)
     if (isCorrect) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      if (settings.vibration) {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
       animateResponse(true);
     } else {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      if (settings.vibration) {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      }
       animateResponse(false);
-      // Vibration pattern for error
-      Vibration.vibrate([100, 50, 100]);
     }
   };
 
@@ -288,13 +290,15 @@ export default function FixedTrainingScreen() {
     
     // Enhanced feedback (no score tracking here anymore)
     if (isCorrect) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      if (settings.vibration) {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
       animateResponse(true);
     } else {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      if (settings.vibration) {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      }
       animateResponse(false);
-      // Vibration pattern for error
-      Vibration.vibrate([100, 50, 100]);
     }
   };
 
@@ -302,23 +306,78 @@ export default function FixedTrainingScreen() {
   const endGame = () => {
     setIsRunning(false);
     const endTime = new Date();
-    const accuracy = score.total > 0 ? (score.correct / score.total * 100) : 0;
+    
+    // Calculate proper N-Back scores
+    const validTrials = trials.length - N_LEVEL;
+    let visualHitsCount = 0;
+    let visualMissesCount = 0;
+    let visualCorrectRejectionsCount = 0;
+    let visualFalseAlarmsCount = 0;
+    let audioHitsCount = 0;
+    let audioMissesCount = 0;
+    let audioCorrectRejectionsCount = 0;
+    let audioFalseAlarmsCount = 0;
+    
+    // Calculate for each trial after N_LEVEL
+    for (let i = N_LEVEL; i < trials.length; i++) {
+      const currentTrialData = trials[i];
+      const nBackTrial = trials[i - N_LEVEL];
+      
+      // Visual modality
+      const visualMatch = currentTrialData.position === nBackTrial.position;
+      const visualPressed = visualHits[i] || false;
+      
+      if (visualMatch && visualPressed) {
+        visualHitsCount++;
+      } else if (visualMatch && !visualPressed) {
+        visualMissesCount++;
+      } else if (!visualMatch && !visualPressed) {
+        visualCorrectRejectionsCount++;
+      } else if (!visualMatch && visualPressed) {
+        visualFalseAlarmsCount++;
+      }
+      
+      // Audio modality
+      const audioMatch = currentTrialData.letter === nBackTrial.letter;
+      const audioPressed = audioHits[i] || false;
+      
+      if (audioMatch && audioPressed) {
+        audioHitsCount++;
+      } else if (audioMatch && !audioPressed) {
+        audioMissesCount++;
+      } else if (!audioMatch && !audioPressed) {
+        audioCorrectRejectionsCount++;
+      } else if (!audioMatch && audioPressed) {
+        audioFalseAlarmsCount++;
+      }
+    }
+    
+    // Calculate accuracy for each modality
+    // Standard N-Back accuracy: (Hits + Correct Rejections) / Total Trials
+    const visualCorrectTotal = visualHitsCount + visualCorrectRejectionsCount;
+    const audioCorrectTotal = audioHitsCount + audioCorrectRejectionsCount;
+    const visualAccuracy = validTrials > 0 ? (visualCorrectTotal / validTrials) * 100 : 0;
+    const audioAccuracy = validTrials > 0 ? (audioCorrectTotal / validTrials) * 100 : 0;
+    
+    // Calculate hit rate and false alarm rate for detailed feedback
+    const visualMatchCount = visualHitsCount + visualMissesCount;
+    const visualNonMatchCount = visualCorrectRejectionsCount + visualFalseAlarmsCount;
+    const visualHitRate = visualMatchCount > 0 ? (visualHitsCount / visualMatchCount) * 100 : 0;
+    const visualFalseAlarmRate = visualNonMatchCount > 0 ? (visualFalseAlarmsCount / visualNonMatchCount) * 100 : 0;
+    
+    const audioMatchCount = audioHitsCount + audioMissesCount;
+    const audioNonMatchCount = audioCorrectRejectionsCount + audioFalseAlarmsCount;
+    const audioHitRate = audioMatchCount > 0 ? (audioHitsCount / audioMatchCount) * 100 : 0;
+    const audioFalseAlarmRate = audioNonMatchCount > 0 ? (audioFalseAlarmsCount / audioNonMatchCount) * 100 : 0;
+    
+    // Overall accuracy (weighted average based on actual responses)
+    const totalCorrect = visualCorrectTotal + audioCorrectTotal;
+    const totalTrials = validTrials * 2; // Visual + Audio trials
+    const overallAccuracy = totalTrials > 0 ? (totalCorrect / totalTrials) * 100 : 0;
     
     // Save session data
-    if (sessionStartTime && score.total > 0) {
+    if (sessionStartTime && validTrials > 0) {
       const duration = Math.round((endTime.getTime() - sessionStartTime.getTime()) / 1000);
-      const visualCorrect = visualHits.filter((hit, index) => {
-        if (index < N_LEVEL || !hit) return false;
-        const currentTrialData = trials[index];
-        const nBackTrial = trials[index - N_LEVEL];
-        return currentTrialData.position === nBackTrial.position;
-      }).length;
-      const audioCorrect = audioHits.filter((hit, index) => {
-        if (index < N_LEVEL || !hit) return false;
-        const currentTrialData = trials[index];
-        const nBackTrial = trials[index - N_LEVEL];
-        return currentTrialData.letter === nBackTrial.letter;
-      }).length;
       
       addSession({
         nLevel: N_LEVEL,
@@ -329,7 +388,7 @@ export default function FixedTrainingScreen() {
         audioHits: audioHitsCount,
         audioMisses: audioMissesCount,
         audioFalseAlarms: audioFalseAlarmsCount,
-        averageReactionTime: 0, // Could be implemented with reaction time tracking
+        averageReactionTime: 0,
         accuracy: Math.round(overallAccuracy),
         duration,
         startedAt: sessionStartTime,
@@ -340,10 +399,11 @@ export default function FixedTrainingScreen() {
     // Create detailed result message
     const resultMessage = 
       `${t.training.accuracy}: ${overallAccuracy.toFixed(1)}%\n\n` +
-      `Visual: ${visualAccuracy.toFixed(1)}%\n` +
-      `${t.training.correct}: ${visualCorrectTotal}/${validTrials}\n\n` +
-      `Audio: ${audioAccuracy.toFixed(1)}%\n` +
-      `${t.training.correct}: ${audioCorrectTotal}/${validTrials}`;
+      `👁 Visual: ${visualAccuracy.toFixed(1)}% (${visualCorrectTotal}/${validTrials})\n` +
+      `Hit: ${visualHitRate.toFixed(0)}% | FA: ${visualFalseAlarmRate.toFixed(0)}%\n\n` +
+      `👂 Audio: ${audioAccuracy.toFixed(1)}% (${audioCorrectTotal}/${validTrials})\n` +
+      `Hit: ${audioHitRate.toFixed(0)}% | FA: ${audioFalseAlarmRate.toFixed(0)}%\n\n` +
+      `${t.training.level}: ${N_LEVEL}`;
     
     Alert.alert(
       t.training.sessionComplete,

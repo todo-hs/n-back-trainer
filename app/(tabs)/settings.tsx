@@ -113,7 +113,7 @@ export default function SettingsScreen() {
                 {settings.language === 'ja' ? 'N-Backの遊び方' : 'How to Play N-Back'}
               </Text>
               <Text style={[styles.settingDescription, { color: isDark ? '#CCCCCC' : '#9CA3AF' }]}>
-                {settings.language === 'ja' ? 'ルール、スコア、効果について学ぶ' : 'Learn the rules, scoring, and benefits'}
+                {settings.language === 'ja' ? 'ルール説明' : 'Rules explanation'}
               </Text>
             </View>
             
@@ -579,18 +579,6 @@ export default function SettingsScreen() {
                   {settings.language === 'ja'
                     ? '1. グリッド上の光る位置（視覚）と読み上げられる文字（聴覚）を記憶\n\n2. 現在の刺激がN個前の刺激と一致する場合、対応するボタンを押す\n\n3. 一致しない場合は何も押さない'
                     : '1. Remember the glowing position (visual) and spoken letter (audio)\n\n2. Press the corresponding button if current stimulus matches the one from N steps back\n\n3. Do nothing if they don\'t match'}
-                </Text>
-              </View>
-              
-              {/* Scoring System */}
-              <View style={styles.tutorialSection}>
-                <Text style={[styles.tutorialSectionTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
-                  {settings.language === 'ja' ? '📊 スコアシステム' : '📊 Scoring System'}
-                </Text>
-                <Text style={[styles.tutorialText, { color: isDark ? '#CCCCCC' : '#6B7280' }]}>
-                  {settings.language === 'ja'
-                    ? '✅ ヒット: 一致時に正しく押した\n❌ ミス: 一致時に押さなかった\n✅ 正しい拒否: 非一致時に正しく押さなかった\n❌ 誤報: 非一致時に間違って押した\n\n正答率 = (ヒット + 正しい拒否) ÷ 全試行数 × 100%'
-                    : '✅ Hit: Correctly pressed when matching\n❌ Miss: Didn\'t press when matching\n✅ Correct Rejection: Correctly didn\'t press when not matching\n❌ False Alarm: Incorrectly pressed when not matching\n\nAccuracy = (Hits + Correct Rejections) ÷ Total Trials × 100%'}
                 </Text>
               </View>
               

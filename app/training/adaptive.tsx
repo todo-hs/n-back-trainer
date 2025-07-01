@@ -263,13 +263,15 @@ export default function AdaptiveTrainingScreen() {
     
     // Enhanced feedback (no score tracking here anymore)
     if (isCorrect) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      if (settings.vibration) {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
       animateResponse(true);
     } else {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      if (settings.vibration) {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      }
       animateResponse(false);
-      // Vibration pattern for error
-      Vibration.vibrate([100, 50, 100]);
     }
   };
 
@@ -289,13 +291,15 @@ export default function AdaptiveTrainingScreen() {
     
     // Enhanced feedback (no score tracking here anymore)
     if (isCorrect) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      if (settings.vibration) {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
       animateResponse(true);
     } else {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      if (settings.vibration) {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      }
       animateResponse(false);
-      // Vibration pattern for error
-      Vibration.vibrate([100, 50, 100]);
     }
   };
 
@@ -303,44 +307,108 @@ export default function AdaptiveTrainingScreen() {
   const endGame = () => {
     setIsRunning(false);
     const endTime = new Date();
-    const accuracy = score.total > 0 ? (score.correct / score.total * 100) : 0;
+    
+    // Calculate proper N-Back scores
+    const validTrials = trials.length - nLevel;
+    let visualHitsCount = 0;
+    let visualMissesCount = 0;
+    let visualCorrectRejectionsCount = 0;
+    let visualFalseAlarmsCount = 0;
+    let audioHitsCount = 0;
+    let audioMissesCount = 0;
+    let audioCorrectRejectionsCount = 0;
+    let audioFalseAlarmsCount = 0;
+    
+    // Calculate for each trial after nLevel
+    for (let i = nLevel; i < trials.length; i++) {
+      const currentTrialData = trials[i];
+      const nBackTrial = trials[i - nLevel];
+      
+      // Visual modality
+      const visualMatch = currentTrialData.position === nBackTrial.position;
+      const visualPressed = visualHits[i] || false;
+      
+      if (visualMatch && visualPressed) {
+        visualHitsCount++;
+      } else if (visualMatch && !visualPressed) {
+        visualMissesCount++;
+      } else if (!visualMatch && !visualPressed) {
+        visualCorrectRejectionsCount++;
+      } else if (!visualMatch && visualPressed) {
+        visualFalseAlarmsCount++;
+      }
+      
+      // Audio modality
+      const audioMatch = currentTrialData.letter === nBackTrial.letter;
+      const audioPressed = audioHits[i] || false;
+      
+      if (audioMatch && audioPressed) {
+        audioHitsCount++;
+      } else if (audioMatch && !audioPressed) {
+        audioMissesCount++;
+      } else if (!audioMatch && !audioPressed) {
+        audioCorrectRejectionsCount++;
+      } else if (!audioMatch && audioPressed) {
+        audioFalseAlarmsCount++;
+      }
+    }
+    
+    // Calculate accuracy for each modality
+    // Standard N-Back accuracy: (Hits + Correct Rejections) / Total Trials
+    const visualCorrectTotal = visualHitsCount + visualCorrectRejectionsCount;
+    const audioCorrectTotal = audioHitsCount + audioCorrectRejectionsCount;
+    const visualAccuracy = validTrials > 0 ? (visualCorrectTotal / validTrials) * 100 : 0;
+    const audioAccuracy = validTrials > 0 ? (audioCorrectTotal / validTrials) * 100 : 0;
+    
+    // Calculate hit rate and false alarm rate for detailed feedback
+    const visualMatchCount = visualHitsCount + visualMissesCount;
+    const visualNonMatchCount = visualCorrectRejectionsCount + visualFalseAlarmsCount;
+    const visualHitRate = visualMatchCount > 0 ? (visualHitsCount / visualMatchCount) * 100 : 0;
+    const visualFalseAlarmRate = visualNonMatchCount > 0 ? (visualFalseAlarmsCount / visualNonMatchCount) * 100 : 0;
+    
+    const audioMatchCount = audioHitsCount + audioMissesCount;
+    const audioNonMatchCount = audioCorrectRejectionsCount + audioFalseAlarmsCount;
+    const audioHitRate = audioMatchCount > 0 ? (audioHitsCount / audioMatchCount) * 100 : 0;
+    const audioFalseAlarmRate = audioNonMatchCount > 0 ? (audioFalseAlarmsCount / audioNonMatchCount) * 100 : 0;
+    
+    // Overall accuracy (weighted average based on actual responses)
+    const totalCorrect = visualCorrectTotal + audioCorrectTotal;
+    const totalTrials = validTrials * 2; // Visual + Audio trials
+    const overallAccuracy = totalTrials > 0 ? (totalCorrect / totalTrials) * 100 : 0;
     
     // Save session data
-    if (sessionStartTime && score.total > 0) {
+    if (sessionStartTime && validTrials > 0) {
       const duration = Math.round((endTime.getTime() - sessionStartTime.getTime()) / 1000);
-      const visualCorrect = visualHits.filter((hit, index) => {
-        if (index < nLevel || !hit) return false;
-        const currentTrialData = trials[index];
-        const nBackTrial = trials[index - nLevel];
-        return currentTrialData.position === nBackTrial.position;
-      }).length;
-      const audioCorrect = audioHits.filter((hit, index) => {
-        if (index < nLevel || !hit) return false;
-        const currentTrialData = trials[index];
-        const nBackTrial = trials[index - nLevel];
-        return currentTrialData.letter === nBackTrial.letter;
-      }).length;
       
       addSession({
         nLevel,
         mode: 'adaptive',
-        visualHits: visualCorrect,
-        visualMisses: 0, // Could be calculated based on actual matches
-        visualFalseAlarms: visualHits.length - visualCorrect,
-        audioHits: audioCorrect,
-        audioMisses: 0, // Could be calculated based on actual matches
-        audioFalseAlarms: audioHits.length - audioCorrect,
-        averageReactionTime: 0, // Could be implemented with reaction time tracking
-        accuracy: Math.round(accuracy),
+        visualHits: visualHitsCount,
+        visualMisses: visualMissesCount,
+        visualFalseAlarms: visualFalseAlarmsCount,
+        audioHits: audioHitsCount,
+        audioMisses: audioMissesCount,
+        audioFalseAlarms: audioFalseAlarmsCount,
+        averageReactionTime: 0,
+        accuracy: Math.round(overallAccuracy),
         duration,
         startedAt: sessionStartTime,
         finishedAt: endTime,
       });
     }
     
+    // Create detailed result message
+    const resultMessage = 
+      `${t.training.accuracy}: ${overallAccuracy.toFixed(1)}%\n\n` +
+      `👁 Visual: ${visualAccuracy.toFixed(1)}% (${visualCorrectTotal}/${validTrials})\n` +
+      `Hit: ${visualHitRate.toFixed(0)}% | FA: ${visualFalseAlarmRate.toFixed(0)}%\n\n` +
+      `👂 Audio: ${audioAccuracy.toFixed(1)}% (${audioCorrectTotal}/${validTrials})\n` +
+      `Hit: ${audioHitRate.toFixed(0)}% | FA: ${audioFalseAlarmRate.toFixed(0)}%\n\n` +
+      `${t.training.level}: ${nLevel}`;
+    
     Alert.alert(
       t.training.sessionComplete,
-      `${t.training.accuracy}: ${accuracy.toFixed(1)}%\n${t.training.correct}: ${score.correct}/${score.total}\n${t.training.level}: ${nLevel}`,
+      resultMessage,
       [
         { text: t.training.continue, onPress: () => {
           // Restart game
@@ -358,12 +426,11 @@ export default function AdaptiveTrainingScreen() {
     );
     
     // Adaptive logic: adjust N-level based on performance
-    if (score.total >= 8) {
-      const accuracyRatio = score.correct / score.total;
-      if (accuracyRatio >= 0.8 && nLevel < 9) {
+    if (validTrials >= 8) {
+      if (overallAccuracy >= 80 && nLevel < 9) {
         setNLevel(nLevel + 1);
         Alert.alert(t.training.levelUp, `${t.training.level}: ${nLevel + 1}`);
-      } else if (accuracyRatio < 0.5 && nLevel > 1) {
+      } else if (overallAccuracy < 50 && nLevel > 1) {
         setNLevel(nLevel - 1);
         Alert.alert(t.training.levelDown, `${t.training.level}: ${nLevel - 1}`);
       }
