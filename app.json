@@ -4,7 +4,7 @@
     "slug": "n-back-trainer",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/brain.png",
     "scheme": "nbackshift",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -14,12 +14,13 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "icon": "./assets/images/brain.png",
       "supportsTablet": true,
       "bundleIdentifier": "com.todoaniki.n-back-trainer"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/brain.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -28,7 +29,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/brain.png"
     },
     "plugins": [
       "expo-router"

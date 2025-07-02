@@ -8,28 +8,28 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		2D464B15361F5B4E9FF3601D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAFF94A5C59210D98F5A2E3 /* ExpoModulesProvider.swift */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		A3BDF5ED03744364E8B45CB4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 11E045A349E02A749477AB92 /* PrivacyInfo.xcprivacy */; };
+		6FAA948C6E5C4D2096C0C1C6 /* libPods-MultiNBack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C3FAAF59158C5894447C7D /* libPods-MultiNBack.a */; };
+		773B54E3BB00C252BDDF30EC /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = ACC289BFAA4BE167DD9E1E38 /* PrivacyInfo.xcprivacy */; };
+		B58C86D90EFB8835C74A18AB /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25E11356280F320F553664B /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		E984E9695ED67C66B77DF46B /* libPods-nbacktrainer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A8CF2A801FD5B9FDFB5D44F2 /* libPods-nbacktrainer.a */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		11E045A349E02A749477AB92 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = nbacktrainer/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* nbacktrainer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nbacktrainer.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = nbacktrainer/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = nbacktrainer/Info.plist; sourceTree = "<group>"; };
-		A8CF2A801FD5B9FDFB5D44F2 /* libPods-nbacktrainer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nbacktrainer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = nbacktrainer/SplashScreen.storyboard; sourceTree = "<group>"; };
+		0256B70851E7B1624F487585 /* Pods-MultiNBack.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MultiNBack.debug.xcconfig"; path = "Target Support Files/Pods-MultiNBack/Pods-MultiNBack.debug.xcconfig"; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* MultiNBack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiNBack.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MultiNBack/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MultiNBack/Info.plist; sourceTree = "<group>"; };
+		70C3FAAF59158C5894447C7D /* libPods-MultiNBack.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MultiNBack.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A725C14B5CA2EB742EDA635 /* Pods-MultiNBack.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MultiNBack.release.xcconfig"; path = "Target Support Files/Pods-MultiNBack/Pods-MultiNBack.release.xcconfig"; sourceTree = "<group>"; };
+		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = MultiNBack/SplashScreen.storyboard; sourceTree = "<group>"; };
+		ACC289BFAA4BE167DD9E1E38 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = MultiNBack/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		BDAFF94A5C59210D98F5A2E3 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-nbacktrainer/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		D185157B766F75BDA10A784D /* Pods-nbacktrainer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nbacktrainer.debug.xcconfig"; path = "Target Support Files/Pods-nbacktrainer/Pods-nbacktrainer.debug.xcconfig"; sourceTree = "<group>"; };
-		D2A5D8DE60D5B70283FF6AA3 /* Pods-nbacktrainer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nbacktrainer.release.xcconfig"; path = "Target Support Files/Pods-nbacktrainer/Pods-nbacktrainer.release.xcconfig"; sourceTree = "<group>"; };
+		D25E11356280F320F553664B /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-MultiNBack/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = nbacktrainer/AppDelegate.swift; sourceTree = "<group>"; };
-		F11748442D0722820044C1D9 /* nbacktrainer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "nbacktrainer-Bridging-Header.h"; path = "nbacktrainer/nbacktrainer-Bridging-Header.h"; sourceTree = "<group>"; };
+		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = MultiNBack/AppDelegate.swift; sourceTree = "<group>"; };
+		F11748442D0722820044C1D9 /* MultiNBack-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "MultiNBack-Bridging-Header.h"; path = "MultiNBack/MultiNBack-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,42 +37,44 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E984E9695ED67C66B77DF46B /* libPods-nbacktrainer.a in Frameworks */,
+				6FAA948C6E5C4D2096C0C1C6 /* libPods-MultiNBack.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		13B07FAE1A68108700A75B9A /* nbacktrainer */ = {
+		13B07FAE1A68108700A75B9A /* MultiNBack */ = {
 			isa = PBXGroup;
 			children = (
 				F11748412D0307B40044C1D9 /* AppDelegate.swift */,
-				F11748442D0722820044C1D9 /* nbacktrainer-Bridging-Header.h */,
+				F11748442D0722820044C1D9 /* MultiNBack-Bridging-Header.h */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				11E045A349E02A749477AB92 /* PrivacyInfo.xcprivacy */,
+				ACC289BFAA4BE167DD9E1E38 /* PrivacyInfo.xcprivacy */,
 			);
-			name = nbacktrainer;
+			name = MultiNBack;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				A8CF2A801FD5B9FDFB5D44F2 /* libPods-nbacktrainer.a */,
+				70C3FAAF59158C5894447C7D /* libPods-MultiNBack.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		5545A7A572D45953978CCCFE /* nbacktrainer */ = {
+		555BDE5B4A9753205764391C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				BDAFF94A5C59210D98F5A2E3 /* ExpoModulesProvider.swift */,
+				0256B70851E7B1624F487585 /* Pods-MultiNBack.debug.xcconfig */,
+				9A725C14B5CA2EB742EDA635 /* Pods-MultiNBack.release.xcconfig */,
 			);
-			name = nbacktrainer;
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -85,12 +87,12 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* nbacktrainer */,
+				13B07FAE1A68108700A75B9A /* MultiNBack */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				A89C27EE742266258DAB57DE /* Pods */,
-				9E2E334DDB579CD1EE69EE3B /* ExpoModulesProviders */,
+				555BDE5B4A9753205764391C /* Pods */,
+				8DFDDF4123DFC8E57B61D107 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -100,26 +102,17 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* nbacktrainer.app */,
+				13B07F961A680F5B00A75B9A /* MultiNBack.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9E2E334DDB579CD1EE69EE3B /* ExpoModulesProviders */ = {
+		8DFDDF4123DFC8E57B61D107 /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				5545A7A572D45953978CCCFE /* nbacktrainer */,
+				C1D14EE892919B5700EC7690 /* MultiNBack */,
 			);
 			name = ExpoModulesProviders;
-			sourceTree = "<group>";
-		};
-		A89C27EE742266258DAB57DE /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				D185157B766F75BDA10A784D /* Pods-nbacktrainer.debug.xcconfig */,
-				D2A5D8DE60D5B70283FF6AA3 /* Pods-nbacktrainer.release.xcconfig */,
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
@@ -128,32 +121,40 @@
 				BB2F792C24A3F905000567C9 /* Expo.plist */,
 			);
 			name = Supporting;
-			path = nbacktrainer/Supporting;
+			path = MultiNBack/Supporting;
+			sourceTree = "<group>";
+		};
+		C1D14EE892919B5700EC7690 /* MultiNBack */ = {
+			isa = PBXGroup;
+			children = (
+				D25E11356280F320F553664B /* ExpoModulesProvider.swift */,
+			);
+			name = MultiNBack;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		13B07F861A680F5B00A75B9A /* nbacktrainer */ = {
+		13B07F861A680F5B00A75B9A /* MultiNBack */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "nbacktrainer" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MultiNBack" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				A52839294A4289A1EF3854E3 /* [Expo] Configure project */,
+				2DACD751424212B976DC0551 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				DC29291ADED05B3B3AFF205A /* [CP] Embed Pods Frameworks */,
+				85CB1879A0622C872C32DE8A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = nbacktrainer;
-			productName = nbacktrainer;
-			productReference = 13B07F961A680F5B00A75B9A /* nbacktrainer.app */;
+			name = MultiNBack;
+			productName = MultiNBack;
+			productReference = 13B07F961A680F5B00A75B9A /* MultiNBack.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -169,7 +170,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "nbacktrainer" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "MultiNBack" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -182,7 +183,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* nbacktrainer */,
+				13B07F861A680F5B00A75B9A /* MultiNBack */,
 			);
 		};
 /* End PBXProject section */
@@ -195,7 +196,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				A3BDF5ED03744364E8B45CB4 /* PrivacyInfo.xcprivacy in Resources */,
+				773B54E3BB00C252BDDF30EC /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,50 +233,14 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-nbacktrainer-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-MultiNBack-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nbacktrainer/Pods-nbacktrainer-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/ExpoConstants_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem/ExpoFileSystem_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSystemUI/ExpoSystemUI_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly/RCT-Folly_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage_resources.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/boost/boost_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/glog/glog_privacy.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoConstants_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoFileSystem_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoSystemUI_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCT-Folly_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNCAsyncStorage_resources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/glog_privacy.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nbacktrainer/Pods-nbacktrainer-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A52839294A4289A1EF3854E3 /* [Expo] Configure project */ = {
+		2DACD751424212B976DC0551 /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -292,15 +257,55 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-nbacktrainer/expo-configure-project.sh\"\n";
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-MultiNBack/expo-configure-project.sh\"\n";
 		};
-		DC29291ADED05B3B3AFF205A /* [CP] Embed Pods Frameworks */ = {
+		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nbacktrainer/Pods-nbacktrainer-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-MultiNBack/Pods-MultiNBack-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/ExpoConstants_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXUpdates/EXUpdates.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem/ExpoFileSystem_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSystemUI/ExpoSystemUI_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly/RCT-Folly_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage_resources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/ReachabilitySwift/ReachabilitySwift.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/boost/boost_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/glog/glog_privacy.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoConstants_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXUpdates.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoFileSystem_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoSystemUI_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCT-Folly_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNCAsyncStorage_resources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ReachabilitySwift.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/glog_privacy.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MultiNBack/Pods-MultiNBack-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		85CB1879A0622C872C32DE8A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MultiNBack/Pods-MultiNBack-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -309,7 +314,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nbacktrainer/Pods-nbacktrainer-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MultiNBack/Pods-MultiNBack-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -320,7 +325,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				2D464B15361F5B4E9FF3601D /* ExpoModulesProvider.swift in Sources */,
+				B58C86D90EFB8835C74A18AB /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,18 +334,18 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D185157B766F75BDA10A784D /* Pods-nbacktrainer.debug.xcconfig */;
+			baseConfigurationReference = 0256B70851E7B1624F487585 /* Pods-MultiNBack.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = nbacktrainer/nbacktrainer.entitlements;
-				CURRENT_PROJECT_VERSION = 2;
+				CODE_SIGN_ENTITLEMENTS = MultiNBack/MultiNBack.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"FB_SONARKIT_ENABLED=1",
 				);
-				INFOPLIST_FILE = nbacktrainer/Info.plist;
+				INFOPLIST_FILE = MultiNBack/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -354,8 +359,8 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.todoaniki.n-back-trainer";
-				PRODUCT_NAME = "NBackShift";
-				SWIFT_OBJC_BRIDGING_HEADER = "nbacktrainer/nbacktrainer-Bridging-Header.h";
+				PRODUCT_NAME = MultiNBack;
+				SWIFT_OBJC_BRIDGING_HEADER = "MultiNBack/MultiNBack-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -365,13 +370,13 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D2A5D8DE60D5B70283FF6AA3 /* Pods-nbacktrainer.release.xcconfig */;
+			baseConfigurationReference = 9A725C14B5CA2EB742EDA635 /* Pods-MultiNBack.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = nbacktrainer/nbacktrainer.entitlements;
-				CURRENT_PROJECT_VERSION = 2;
-				INFOPLIST_FILE = nbacktrainer/Info.plist;
+				CODE_SIGN_ENTITLEMENTS = MultiNBack/MultiNBack.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = MultiNBack/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -385,8 +390,8 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.todoaniki.n-back-trainer";
-				PRODUCT_NAME = "NBackShift";
-				SWIFT_OBJC_BRIDGING_HEADER = "nbacktrainer/nbacktrainer-Bridging-Header.h";
+				PRODUCT_NAME = MultiNBack;
+				SWIFT_OBJC_BRIDGING_HEADER = "MultiNBack/MultiNBack-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -520,7 +525,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "nbacktrainer" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MultiNBack" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -529,7 +534,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "nbacktrainer" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "MultiNBack" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
