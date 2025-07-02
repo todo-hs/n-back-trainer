@@ -61,7 +61,8 @@ export default function AdaptiveTrainingScreen() {
   const STIMULUS_DURATION = 800; // 800ms to show stimulus
   const FADE_OUT_DURATION = 1000; // 1000ms fade out animation
   const INTER_STIMULUS_INTERVAL = 3000; // Total time per trial (3 seconds)
-  const TOTAL_TRIALS = 20;
+  const EFFECTIVE_TRIALS = 20; // 有効試行数（常に20回）
+  const TOTAL_TRIALS = nLevel + EFFECTIVE_TRIALS; // 準備期間 + 有効試行
   // Optimal letter count based on N-level for effective training
   const getOptimalLetters = (nLevel: number) => {
     const optimalCount = Math.max(3, Math.min(8, nLevel + 2)); // N+2 letters, min 3, max 8
@@ -136,31 +137,65 @@ export default function AdaptiveTrainingScreen() {
   const triggerLevelUpEffect = () => {
     setShowLevelUpEffect(true);
     
-    // Level up text animation
+    // Level up text animation with more dramatic effect
     Animated.sequence([
+      // Initial bounce in
+      Animated.spring(levelUpScale, {
+        toValue: 1.2,
+        tension: 100,
+        friction: 4,
+        useNativeDriver: true,
+      }),
+      // Quick scale down
+      Animated.spring(levelUpScale, {
+        toValue: 1,
+        tension: 120,
+        friction: 6,
+        useNativeDriver: true,
+      }),
+      // Pulse effect
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(levelUpScale, {
+            toValue: 1.05,
+            duration: 600,
+            useNativeDriver: true,
+          }),
+          Animated.timing(levelUpScale, {
+            toValue: 1,
+            duration: 600,
+            useNativeDriver: true,
+          }),
+        ]),
+        { iterations: 2 }
+      ),
+      // Hold for a moment
+      Animated.delay(1000),
+      // Fade out
       Animated.parallel([
-        Animated.spring(levelUpScale, {
-          toValue: 1,
-          tension: 50,
-          friction: 3,
+        Animated.timing(levelUpOpacity, {
+          toValue: 0,
+          duration: 800,
           useNativeDriver: true,
         }),
-        Animated.timing(levelUpOpacity, {
-          toValue: 1,
-          duration: 300,
+        Animated.timing(levelUpScale, {
+          toValue: 0.8,
+          duration: 800,
           useNativeDriver: true,
         }),
       ]),
-      Animated.delay(2000),
-      Animated.timing(levelUpOpacity, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }),
     ]).start(() => {
       setShowLevelUpEffect(false);
       levelUpScale.setValue(0);
+      levelUpOpacity.setValue(0);
     });
+    
+    // Also immediately show opacity for initial animation
+    Animated.timing(levelUpOpacity, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
     
     // Confetti animation
     const confettiAnimationList = confettiAnimations.map((confetti, index) => {
@@ -250,6 +285,14 @@ export default function AdaptiveTrainingScreen() {
       cellScale.setValue(1);
       highlightOpacity.setValue(0);
 
+      // Initialize audio engine with a silent speech to warm up
+      Speech.speak(' ', {
+        language: 'en-US',
+        pitch: 1.0,
+        rate: 0.8,
+        volume: 0.01,
+      });
+
       // Start a new game after delay
       const startDelay = setTimeout(() => {
         console.log('Starting new game...');
@@ -260,7 +303,8 @@ export default function AdaptiveTrainingScreen() {
         // Generate new trials with current adaptive level
         const currentLevel = settings.adaptiveN || 2;
         setNLevel(currentLevel);
-        const newTrials = generateTrials(currentLevel, TOTAL_TRIALS);
+        const totalTrialsCount = currentLevel + EFFECTIVE_TRIALS;
+        const newTrials = generateTrials(currentLevel, totalTrialsCount);
         
         // Set initial state
         setTrials(newTrials);
@@ -278,7 +322,21 @@ export default function AdaptiveTrainingScreen() {
         // Reset highlight opacity before starting
         highlightOpacity.setValue(0);
         
-        setIsRunning(true); // Start the game
+        // Pre-speak the first letter with minimal volume to initialize properly
+        if (newTrials.length > 0) {
+          Speech.speak(newTrials[0].letter.toLowerCase(), {
+            language: 'en-US',
+            pitch: 1.0,
+            rate: 0.8,
+            volume: 0.01,
+            onDone: () => {
+              // Now start the game with audio engine ready
+              setIsRunning(true);
+            }
+          });
+        } else {
+          setIsRunning(true); // Start the game
+        }
         
         console.log('Game started with', newTrials.length, 'trials');
         
@@ -333,16 +391,33 @@ export default function AdaptiveTrainingScreen() {
     // Haptic feedback for stimulus
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     
-    // Stop any ongoing speech and speak the letter
-    Speech.stop();
-    setTimeout(() => {
-      Speech.speak(trial.letter.toLowerCase(), {
-        language: 'en-US',
-        pitch: 1.0,
-        rate: 0.8, // Improved speech rate
-        quality: 'enhanced',
-      });
-    }, 100); // Small delay to ensure previous speech is stopped
+    // Improved audio handling
+    const speakLetter = async () => {
+      try {
+        // Stop any ongoing speech first
+        await Speech.stop();
+        
+        // Small delay to ensure clean audio start
+        await new Promise(resolve => setTimeout(resolve, 50));
+        
+        // Speak with optimized settings
+        await Speech.speak(trial.letter.toLowerCase(), {
+          language: 'en-US',
+          pitch: 1.0,
+          rate: 0.85, // Slightly slower for clarity
+          volume: 1.0,
+          quality: Speech.VoiceQuality?.Enhanced || 'enhanced',
+          onStart: () => console.log(`Speaking: ${trial.letter}`),
+          onDone: () => console.log(`Finished speaking: ${trial.letter}`),
+          onError: (error) => console.error('Speech error:', error),
+        });
+      } catch (error) {
+        console.error('Failed to speak letter:', error);
+      }
+    };
+    
+    // Execute speech asynchronously to not block the UI
+    speakLetter();
     
     // Start fade out after stimulus duration
     const fadeOutTimeout = setTimeout(() => {
@@ -537,7 +612,7 @@ export default function AdaptiveTrainingScreen() {
       [
         { text: t.training.continue, onPress: () => {
           // Restart game
-          const newTrials = generateTrials(nLevel, TOTAL_TRIALS);
+          const newTrials = generateTrials(nLevel, nLevel + EFFECTIVE_TRIALS);
           setTrials(newTrials);
           setCurrentTrial(0);
           setScore({ correct: 0, total: 0 });
@@ -609,8 +684,14 @@ export default function AdaptiveTrainingScreen() {
       </TouchableOpacity>
       
       <View style={styles.header}>
+        <View style={styles.levelIndicator}>
+          <Text style={styles.levelText}>N = {nLevel}</Text>
+        </View>
         <Text style={styles.subtitle}>
-          {t.training.level}: {nLevel} | {t.training.trial}: {currentTrial + 1}/{TOTAL_TRIALS}
+          {currentTrial < nLevel 
+            ? `準備中: ${currentTrial + 1}/${nLevel}`
+            : `${t.training.trial}: ${currentTrial - nLevel + 1}/${EFFECTIVE_TRIALS}`
+          }
         </Text>
       </View>
       
@@ -730,7 +811,8 @@ export default function AdaptiveTrainingScreen() {
             ]}
           >
             <Text style={styles.levelUpText}>🎉 LEVEL UP! 🎉</Text>
-            <Text style={styles.levelUpSubtext}>N-Level {nLevel}</Text>
+            <Text style={styles.levelUpMainText}>N = {nLevel}</Text>
+            <Text style={styles.levelUpSubtext}>難易度アップ！おめでとう！</Text>
           </Animated.View>
         </View>
       )}
@@ -749,6 +831,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     marginTop: 10,
+  },
+  levelIndicator: {
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginBottom: 10,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  levelText: {
+    fontSize: 20,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   backArrowHeader: {
     position: 'absolute',
@@ -769,9 +872,9 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
-    marginTop: 8,
+    color: '#AAAAAA',
     textAlign: 'center',
+    fontWeight: '600',
   },
   mainContent: {
     flex: 1,
@@ -940,25 +1043,46 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   levelUpContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    borderRadius: 20,
-    paddingHorizontal: 40,
-    paddingVertical: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    borderRadius: 25,
+    paddingHorizontal: 50,
+    paddingVertical: 30,
     alignItems: 'center',
-    borderWidth: 3,
+    borderWidth: 4,
     borderColor: '#FFD700',
+    shadowColor: '#FFD700',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 20,
+    elevation: 20,
   },
   levelUpText: {
-    fontSize: 28,
-    fontWeight: '800',
+    fontSize: 32,
+    fontWeight: '900',
     color: '#FFD700',
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
+    textShadowColor: '#FFD700',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 10,
+  },
+  levelUpMainText: {
+    fontSize: 48,
+    fontWeight: '900',
+    color: '#00FF00',
+    textAlign: 'center',
+    marginBottom: 10,
+    textShadowColor: '#00FF00',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 15,
   },
   levelUpSubtext: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '700',
     color: '#FFFFFF',
     textAlign: 'center',
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
 });

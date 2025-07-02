@@ -589,8 +589,8 @@ export default function SettingsScreen() {
                 </Text>
                 <Text style={[styles.tutorialText, { color: isDark ? '#CCCCCC' : '#6B7280' }]}>
                   {settings.language === 'ja'
-                    ? '🔵 適応型トレーニング\nパフォーマンスに基づいて自動的にレベルが調整されます。常に最適な難易度でトレーニングできます。\n\n🟢 固定型トレーニング\n設定したNレベルで一定の難易度を維持します。特定のレベルを集中的に練習したい場合に最適です。'
-                    : '🔵 Adaptive Training\nAutomatically adjusts level based on your performance. Always trains at your optimal difficulty level.\n\n🟢 Fixed Training\nMaintains consistent difficulty at your selected N-level. Perfect for focused practice at a specific level.'}
+                    ? '🔵 成長型トレーニング\nパフォーマンスに基づいて自動的にレベルが調整されます。常に最適な難易度でトレーニングできます。\n\n🟢 固定型トレーニング\n設定したNレベルで一定の難易度を維持します。特定のレベルを集中的に練習したい場合に最適です。'
+                    : '🔵 Growth Training\nAutomatically adjusts level based on your performance. Always trains at your optimal difficulty level.\n\n🟢 Fixed Training\nMaintains consistent difficulty at your selected N-level. Perfect for focused practice at a specific level.'}
                 </Text>
               </View>
               
@@ -601,8 +601,8 @@ export default function SettingsScreen() {
                 </Text>
                 <Text style={[styles.tutorialText, { color: isDark ? '#CCCCCC' : '#6B7280' }]}>
                   {settings.language === 'ja'
-                    ? '🔥 レベルアップ: 正答率80%以上でN+1\n❄️ レベルダウン: 正答率50%未満でN-1\n\n適応モードでは自動調整されます。'
-                    : '🔥 Level Up: 80%+ accuracy → N+1\n❄️ Level Down: <50% accuracy → N-1\n\nAdaptive mode adjusts automatically.'}
+                    ? '🔥 レベルアップ: 正答率80%以上でN+1\n❄️ レベルダウン: 正答率50%未満でN-1\n\n成長型モードでは自動調整されます。'
+                    : '🔥 Level Up: 80%+ accuracy → N+1\n❄️ Level Down: <50% accuracy → N-1\n\nGrowth mode adjusts automatically.'}
                 </Text>
               </View>
               

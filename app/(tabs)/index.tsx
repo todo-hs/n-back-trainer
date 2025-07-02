@@ -43,14 +43,14 @@ export default function HomeScreen() {
         
         
         <TouchableOpacity style={styles.adaptiveButton} onPress={goToAdaptive}>
-          <Text style={styles.buttonText}>{t.home.adaptiveTitle}</Text>
+          <Text style={styles.buttonText}>{t.home.adaptiveTitle} (N={settings.adaptiveN})</Text>
           <Text style={styles.buttonSubtext}>{t.home.adaptiveSubtext}</Text>
           <Text style={styles.buttonDetail}>{t.home.adaptiveDetail}</Text>
         </TouchableOpacity>
         
         <TouchableOpacity style={styles.fixedButton} onPress={goToFixed}>
           <Text style={styles.buttonText}>{t.home.fixedTitle} (N={settings.fixedN})</Text>
-          <Text style={styles.buttonSubtext}>{settings.fixedN}{t.home.fixedSubtext}</Text>
+          <Text style={styles.buttonSubtext}>{t.home.fixedSubtext}</Text>
           <Text style={styles.buttonDetail}>{t.home.fixedDetail} {settings.fixedN > 2 && !settings.isPremium && '🔓'}</Text>
         </TouchableOpacity>
       </View>
@@ -113,17 +113,18 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 17,
-    fontWeight: '700',
+    fontSize: 20,
+    fontWeight: '800',
     marginBottom: 5,
     textAlign: 'center',
   },
   buttonSubtext: {
     color: '#FFFFFF',
-    fontSize: 12,
-    opacity: 0.9,
+    fontSize: 15,
+    opacity: 0.95,
     textAlign: 'center',
     marginBottom: 3,
+    fontWeight: '600',
   },
   buttonDetail: {
     color: '#FFFFFF',

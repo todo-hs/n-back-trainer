@@ -3,7 +3,7 @@ import { Stimulus } from '../types';
 
 export function useStimuli(count: number, nLevel: number, targetHitRate: number = 0.3) {
   const stimuli = useMemo(() => {
-    const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ'.split('');
+    const letters = 'ABCEFGHJKLMNPQRSTUVWXYZ'.split('');
     const generated: Stimulus[] = [];
     const timestamp = Date.now();
     
