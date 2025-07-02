@@ -54,6 +54,11 @@ export default function AdaptiveTrainingScreen() {
     }))
   ).current;
   
+  // Level down effect
+  const [showLevelDownEffect, setShowLevelDownEffect] = useState(false);
+  const levelDownScale = useRef(new Animated.Value(0)).current;
+  const levelDownOpacity = useRef(new Animated.Value(0)).current;
+  
   // Refs
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   
@@ -245,6 +250,58 @@ export default function AdaptiveTrainingScreen() {
     
     // Haptic feedback
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  };
+  
+  // Level down effect
+  const triggerLevelDownEffect = () => {
+    setShowLevelDownEffect(true);
+    
+    // Level down text animation
+    Animated.sequence([
+      // Fade in and scale up
+      Animated.parallel([
+        Animated.timing(levelDownOpacity, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.spring(levelDownScale, {
+          toValue: 1.1,
+          tension: 100,
+          friction: 4,
+          useNativeDriver: true,
+        }),
+      ]),
+      // Scale to normal
+      Animated.spring(levelDownScale, {
+        toValue: 1,
+        tension: 120,
+        friction: 6,
+        useNativeDriver: true,
+      }),
+      // Hold
+      Animated.delay(2000),
+      // Fade out
+      Animated.parallel([
+        Animated.timing(levelDownOpacity, {
+          toValue: 0,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.timing(levelDownScale, {
+          toValue: 0.8,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ]),
+    ]).start(() => {
+      setShowLevelDownEffect(false);
+      levelDownScale.setValue(0);
+      levelDownOpacity.setValue(0);
+    });
+    
+    // Haptic feedback
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
   };
 
 
@@ -597,54 +654,77 @@ export default function AdaptiveTrainingScreen() {
       });
     }
     
-    // Create detailed result message
-    const resultMessage = 
-      `${t.training.accuracy}: ${overallAccuracy.toFixed(1)}%\n\n` +
-      `👁 Visual: ${visualAccuracy.toFixed(1)}% (${visualScore}/${validTrials})\n` +
-      `Hit: ${visualHitRate.toFixed(0)}% | FA: ${visualFalseAlarmRate.toFixed(0)}%\n\n` +
-      `👂 Audio: ${audioAccuracy.toFixed(1)}% (${audioScore}/${validTrials})\n` +
-      `Hit: ${audioHitRate.toFixed(0)}% | FA: ${audioFalseAlarmRate.toFixed(0)}%\n\n` +
-      `${t.training.level}: ${nLevel}`;
+    // Check for level changes FIRST before showing results
+    let levelChanged = false;
+    let newLevelAfterChange = nLevel;
     
-    Alert.alert(
-      t.training.sessionComplete,
-      resultMessage,
-      [
-        { text: t.training.continue, onPress: () => {
-          // Restart game
-          const newTrials = generateTrials(nLevel, nLevel + EFFECTIVE_TRIALS);
-          setTrials(newTrials);
-          setCurrentTrial(0);
-          setScore({ correct: 0, total: 0 });
-          setVisualHits([]);
-          setAudioHits([]);
-          setSessionStartTime(new Date());
-          setIsRunning(true);
-        } },
-        { text: t.training.backToHome, onPress: () => router.replace('/') }
-      ]
-    );
-    
-    // Adaptive logic: adjust N-level based on performance and persist
     if (validTrials >= 8) {
       if (overallAccuracy >= 80 && nLevel < 9) {
-        const newLevel = nLevel + 1;
-        setNLevel(newLevel);
-        updateAdaptiveLevel(newLevel); // Persist the level up
+        // Level up!
+        levelChanged = true;
+        newLevelAfterChange = nLevel + 1;
+        setNLevel(newLevelAfterChange);
+        updateAdaptiveLevel(newLevelAfterChange);
         
-        // Trigger celebration effect instead of alert
+        // Show level up effect immediately
+        triggerLevelUpEffect();
+        
+        // Wait for effect to be visible before showing results
         setTimeout(() => {
-          triggerLevelUpEffect();
-          setTimeout(() => {
-            Alert.alert(t.training.levelUp, `${t.training.level}: ${newLevel}`);
-          }, 2500);
-        }, 500);
+          showResultsAlert(newLevelAfterChange);
+        }, 3000); // Wait for celebration effect
+        
       } else if (overallAccuracy < 50 && nLevel > 1) {
-        const newLevel = nLevel - 1;
-        setNLevel(newLevel);
-        updateAdaptiveLevel(newLevel); // Persist the level down
-        Alert.alert(t.training.levelDown, `${t.training.level}: ${newLevel}`);
+        // Level down
+        levelChanged = true;
+        newLevelAfterChange = nLevel - 1;
+        setNLevel(newLevelAfterChange);
+        updateAdaptiveLevel(newLevelAfterChange);
+        
+        // Show level down effect
+        triggerLevelDownEffect();
+        
+        // Wait for effect to be visible before showing results
+        setTimeout(() => {
+          showResultsAlert(newLevelAfterChange);
+        }, 2500); // Wait for level down effect
+      } else {
+        // No level change, show results immediately
+        showResultsAlert(nLevel);
       }
+    } else {
+      // Not enough trials for adaptive logic
+      showResultsAlert(nLevel);
+    }
+    
+    // Helper function to show results alert
+    function showResultsAlert(currentLevel: number) {
+      const resultMessage = 
+        `${t.training.accuracy}: ${overallAccuracy.toFixed(1)}%\n\n` +
+        `👁 Visual: ${visualAccuracy.toFixed(1)}% (${visualScore}/${validTrials})\n` +
+        `Hit: ${visualHitRate.toFixed(0)}% | FA: ${visualFalseAlarmRate.toFixed(0)}%\n\n` +
+        `👂 Audio: ${audioAccuracy.toFixed(1)}% (${audioScore}/${validTrials})\n` +
+        `Hit: ${audioHitRate.toFixed(0)}% | FA: ${audioFalseAlarmRate.toFixed(0)}%\n\n` +
+        `${t.training.level}: ${currentLevel}`;
+      
+      Alert.alert(
+        t.training.sessionComplete,
+        resultMessage,
+        [
+          { text: t.training.continue, onPress: () => {
+            // Restart game with current level
+            const newTrials = generateTrials(currentLevel, currentLevel + EFFECTIVE_TRIALS);
+            setTrials(newTrials);
+            setCurrentTrial(0);
+            setScore({ correct: 0, total: 0 });
+            setVisualHits([]);
+            setAudioHits([]);
+            setSessionStartTime(new Date());
+            setIsRunning(true);
+          } },
+          { text: t.training.backToHome, onPress: () => router.replace('/') }
+        ]
+      );
     }
   };
 
@@ -813,6 +893,25 @@ export default function AdaptiveTrainingScreen() {
             <Text style={styles.levelUpText}>🎉 LEVEL UP! 🎉</Text>
             <Text style={styles.levelUpMainText}>N = {nLevel}</Text>
             <Text style={styles.levelUpSubtext}>難易度アップ！おめでとう！</Text>
+          </Animated.View>
+        </View>
+      )}
+      
+      {/* Level Down Effect */}
+      {showLevelDownEffect && (
+        <View style={styles.levelDownOverlay}>
+          <Animated.View
+            style={[
+              styles.levelDownContainer,
+              {
+                transform: [{ scale: levelDownScale }],
+                opacity: levelDownOpacity,
+              },
+            ]}
+          >
+            <Text style={styles.levelDownText}>⚠️ LEVEL DOWN ⚠️</Text>
+            <Text style={styles.levelDownMainText}>N = {nLevel}</Text>
+            <Text style={styles.levelDownSubtext}>難易度を下げました</Text>
           </Animated.View>
         </View>
       )}
@@ -1077,6 +1176,61 @@ const styles = StyleSheet.create({
     textShadowRadius: 15,
   },
   levelUpSubtext: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
+  },
+  // Level down styles
+  levelDownOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    pointerEvents: 'none',
+    zIndex: 1000,
+  },
+  levelDownContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    borderRadius: 25,
+    paddingHorizontal: 50,
+    paddingVertical: 30,
+    alignItems: 'center',
+    borderWidth: 4,
+    borderColor: '#FF6B6B',
+    shadowColor: '#FF6B6B',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 20,
+    elevation: 20,
+  },
+  levelDownText: {
+    fontSize: 32,
+    fontWeight: '900',
+    color: '#FF6B6B',
+    textAlign: 'center',
+    marginBottom: 10,
+    textShadowColor: '#FF6B6B',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 10,
+  },
+  levelDownMainText: {
+    fontSize: 48,
+    fontWeight: '900',
+    color: '#FFA500',
+    textAlign: 'center',
+    marginBottom: 10,
+    textShadowColor: '#FFA500',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 15,
+  },
+  levelDownSubtext: {
     fontSize: 20,
     fontWeight: '700',
     color: '#FFFFFF',
